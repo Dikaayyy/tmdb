@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_model.dart';
 
 class FeaturedMovieCard extends StatelessWidget {
   const FeaturedMovieCard({
     super.key,
     required this.movie,
-    this.width = 330,
+    required this.width,
     this.onTap,
   });
 
@@ -17,21 +18,21 @@ class FeaturedMovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final imageHeight = width * (200 / 310);
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: width),
+    return SizedBox(
+      width: width,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          width: width,
           clipBehavior: Clip.antiAlias,
           decoration: ShapeDecoration(
-            color: const Color(0xFFFCFCFF),
+            color: AppColors.surface,
             shape: RoundedRectangleBorder(
               side: const BorderSide(
                 width: 1,
-                color: Color(0x193F55C6),
+                color: AppColors.border,
               ),
               borderRadius: BorderRadius.circular(16),
             ),
@@ -42,36 +43,46 @@ class FeaturedMovieCard extends StatelessWidget {
             children: [
               SizedBox(
                 width: double.infinity,
-                height: 185,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    _CardImage(movie: movie),
-                    Container(
-                      color: Colors.black.withValues(alpha: 0.20),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: const Alignment(0.5, 0),
-                          end: const Alignment(0.5, 1),
-                          colors: [
-                            Colors.black.withValues(alpha: 0.60),
-                            Colors.black.withValues(alpha: 0),
-                          ],
+                height: imageHeight,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      _CardImage(movie: movie),
+                      Container(
+                        color: Colors.black.withValues(alpha: 0.20),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: const Alignment(0.5, 0),
+                            end: const Alignment(0.5, 1),
+                            colors: [
+                              Colors.black.withValues(alpha: 0.55),
+                              Colors.black.withValues(alpha: 0.10),
+                              Colors.black.withValues(alpha: 0.45),
+                            ],
+                            stops: const [0, 0.45, 1],
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: _RatingBadge(voteAverage: movie.voteAverage),
                         ),
                       ),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: _RatingBadge(voteAverage: movie.voteAverage),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -80,9 +91,10 @@ class FeaturedMovieCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: const Color(0xFF1F2937),
+                        color: AppColors.textPrimary,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: -0.36,
+                        letterSpacing: -0.2,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -93,7 +105,7 @@ class FeaturedMovieCard extends StatelessWidget {
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: const Color(0xFF71747D),
+                        color: AppColors.textSecondary,
                         height: 1.5,
                       ),
                     ),
@@ -121,7 +133,7 @@ class _CardImage extends StatelessWidget {
 
     if (imageUrl.isEmpty) {
       return Container(
-        color: const Color(0xFFE5E7EB),
+        color: AppColors.background,
         alignment: Alignment.center,
         child: const Icon(
           Icons.movie_outlined,
@@ -136,7 +148,7 @@ class _CardImage extends StatelessWidget {
       fit: BoxFit.cover,
       errorBuilder: (_, __, ___) {
         return Container(
-          color: const Color(0xFFE5E7EB),
+          color: AppColors.background,
           alignment: Alignment.center,
           child: const Icon(
             Icons.broken_image_outlined,
@@ -161,7 +173,7 @@ class _RatingBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: ShapeDecoration(
-        color: const Color(0xFFFACC15),
+        color: AppColors.secondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),

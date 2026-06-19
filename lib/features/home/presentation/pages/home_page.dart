@@ -10,6 +10,10 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moviesAsync = ref.watch(homeViewModelProvider);
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final cardWidth = ((screenWidth - 32) * 0.82).clamp(260.0, 330.0);
+    final cardImageHeight = cardWidth * (200 / 310);
+    final featuredSectionHeight = cardImageHeight + 110;
 
     return Scaffold(
       appBar: AppBar(
@@ -27,25 +31,31 @@ class HomePage extends ConsumerWidget {
             onRefresh: () => ref.read(homeViewModelProvider.notifier).refresh(),
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16),
               children: [
-                Text(
-                  'Trending Movies',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Text(
+                    'Trending Movies',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 SizedBox(
-                  height: 300,
+                  height: featuredSectionHeight,
                   child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     scrollDirection: Axis.horizontal,
                     itemCount: movies.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 16),
                     itemBuilder: (context, index) {
                       final movie = movies[index];
 
-                      return FeaturedMovieCard(movie: movie);
+                      return FeaturedMovieCard(
+                        movie: movie,
+                        width: cardWidth,
+                      );
                     },
                   ),
                 ),
