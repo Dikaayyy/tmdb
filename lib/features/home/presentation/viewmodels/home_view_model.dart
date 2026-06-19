@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../data/models/movie_model.dart';
-import '../../data/repositories/movie_repository.dart';
+import '../../../movies/data/models/movie_model.dart';
+import '../../../movies/data/repositories/movie_repository.dart';
 
 final movieRepositoryProvider = Provider<MovieRepository>((ref) {
   return MovieRepository();

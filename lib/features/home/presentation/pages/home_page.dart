@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../movies/presentation/widgets/featured_movie_card.dart';
 import '../viewmodels/home_view_model.dart';
 
 class HomePage extends ConsumerWidget {
@@ -24,32 +25,31 @@ class HomePage extends ConsumerWidget {
 
           return RefreshIndicator(
             onRefresh: () => ref.read(homeViewModelProvider.notifier).refresh(),
-            child: ListView.separated(
+            child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(16),
-              itemCount: movies.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final movie = movies[index];
+              children: [
+                Text(
+                  'Trending Movies',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  height: 300,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: movies.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 16),
+                    itemBuilder: (context, index) {
+                      final movie = movies[index];
 
-                return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                      return FeaturedMovieCard(movie: movie);
+                    },
                   ),
-                  tileColor: Colors.grey.shade100,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  title: Text(movie.title),
-                  subtitle: Text(
-                    movie.releaseDate.isEmpty
-                        ? 'Release date unavailable'
-                        : movie.releaseDate,
-                  ),
-                  trailing: Text(movie.voteAverage.toStringAsFixed(1)),
-                );
-              },
+                ),
+              ],
             ),
           );
         },
