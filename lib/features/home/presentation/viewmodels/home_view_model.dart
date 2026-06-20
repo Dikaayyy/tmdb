@@ -46,16 +46,17 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
     final uniqueGenresByName = <String, GenreModel>{};
 
     for (final genre in movieGenresResponse.genres) {
-      uniqueGenresByName[genre.name] = GenreModel(
+      uniqueGenresByName[_genreKey(genre.name)] = GenreModel(
         name: genre.name,
         movieGenreId: genre.movieGenreId,
       );
     }
 
     for (final genre in tvGenresResponse.genres) {
-      final existing = uniqueGenresByName[genre.name];
-      uniqueGenresByName[genre.name] = (existing ?? GenreModel(name: genre.name))
-          .copyWith(tvGenreId: genre.movieGenreId);
+      final key = _genreKey(genre.name);
+      final existing = uniqueGenresByName[key];
+      uniqueGenresByName[key] = (existing ?? GenreModel(name: genre.name))
+          .copyWith(tvGenreId: genre.tvGenreId);
     }
 
     return HomeState(
@@ -88,5 +89,16 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
 
   DateTime _parseDate(String rawDate) {
     return DateTime.tryParse(rawDate) ?? DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
+  String _genreKey(String name) {
+    return switch (name) {
+      'Abenteuer' => 'Action',
+      'Action & Adventure' => 'Action',
+      'Fantasy' => 'Science Fiction',
+      'Sci-Fi & Fantasy' => 'Science Fiction',
+      'War & Politics' => 'Kriegsfilm',
+      _ => name,
+    };
   }
 }

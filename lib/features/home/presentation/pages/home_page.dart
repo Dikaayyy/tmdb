@@ -9,6 +9,7 @@ import '../widgets/new_release_section.dart';
 import '../widgets/top_rated_section.dart';
 import '../widgets/trending_section.dart';
 import '../viewmodels/home_view_model.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -96,9 +97,9 @@ class _HomeHeader extends StatelessWidget {
           ),
           const Row(
             children: [
-              _HeaderIconButton(assetPath: 'assets/icons/notification.png'),
+              _HeaderIconButton(icon: iconly.IconlyLight.notification),
               SizedBox(width: 4),
-              _HeaderIconButton(assetPath: 'assets/icons/search.png'),
+              _HeaderIconButton(icon: iconly.IconlyLight.search),
             ],
           ),
         ],
@@ -108,9 +109,9 @@ class _HomeHeader extends StatelessWidget {
 }
 
 class _HeaderIconButton extends StatelessWidget {
-  const _HeaderIconButton({required this.assetPath});
+  const _HeaderIconButton({required this.icon});
 
-  final String assetPath;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +120,7 @@ class _HeaderIconButton extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(999)),
       alignment: Alignment.center,
-      child: Image.asset(assetPath, width: 20, height: 20),
+      child: Icon(icon, color: AppColors.primary, size: 20),
     );
   }
 }

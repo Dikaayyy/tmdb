@@ -4,6 +4,7 @@ import '../core/widgets/floating_bottom_nav_bar.dart';
 import '../features/home/presentation/pages/home_page.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
 import '../features/watchlist/presentation/pages/watchlist_page.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -16,9 +17,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
   static const _items = [
-    FloatingBottomNavBarItem(label: 'Beranda', icon: Icons.home_rounded),
-    FloatingBottomNavBarItem(label: 'Watchlist', icon: Icons.bookmark_rounded),
-    FloatingBottomNavBarItem(label: 'Profil', icon: Icons.person_rounded),
+    FloatingBottomNavBarItem(label: 'Beranda', icon: iconly.IconlyBold.home),
+    FloatingBottomNavBarItem(label: 'Watchlist', icon: iconly.IconlyLight.bookmark),
+    FloatingBottomNavBarItem(label: 'Profil', icon: iconly.IconlyLight.profile),
   ];
 
   final _pages = const [HomePage(), WatchlistPage(), ProfilePage()];

@@ -148,6 +148,10 @@ class _FloatingBottomNavItemState extends State<_FloatingBottomNavItem>
           child: InkWell(
             onTap: widget.onTap,
             borderRadius: BorderRadius.circular(999),
+            splashFactory: NoSplash.splashFactory,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+            focusColor: Colors.transparent,
             child: SizedBox(
               width: width,
               height: 40,
