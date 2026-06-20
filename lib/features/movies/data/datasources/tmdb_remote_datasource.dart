@@ -62,8 +62,29 @@ class TmdbRemoteDatasource {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> getMovieDetail(int movieId) async {
-    final response = await DioClient.instance.get('/movie/$movieId');
+  Future<Map<String, dynamic>> getMovieDetail(
+    int movieId, {
+    String? appendToResponse,
+  }) async {
+    final response = await DioClient.instance.get(
+      '/movie/$movieId',
+      queryParameters: appendToResponse == null
+          ? null
+          : {'append_to_response': appendToResponse},
+    );
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> getTvDetail(
+    int tvId, {
+    String? appendToResponse,
+  }) async {
+    final response = await DioClient.instance.get(
+      '/tv/$tvId',
+      queryParameters: appendToResponse == null
+          ? null
+          : {'append_to_response': appendToResponse},
+    );
     return response.data;
   }
 }

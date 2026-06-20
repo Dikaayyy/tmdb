@@ -1,5 +1,10 @@
 import '../../../../core/constants/api_constants.dart';
 
+enum MediaType {
+  movie,
+  tv,
+}
+
 class MovieModel {
   const MovieModel({
     required this.id,
@@ -10,6 +15,7 @@ class MovieModel {
     required this.voteAverage,
     required this.releaseDate,
     required this.genreIds,
+    required this.mediaType,
   });
 
   final int id;
@@ -20,8 +26,21 @@ class MovieModel {
   final double voteAverage;
   final String releaseDate;
   final List<int> genreIds;
+  final MediaType mediaType;
+
+  bool get isTv => mediaType == MediaType.tv;
+  bool get isMovie => mediaType == MediaType.movie;
 
   factory MovieModel.fromJson(Map<String, dynamic> json) {
+    final jsonMediaType = json['media_type'] as String?;
+    final parsedMediaType = jsonMediaType == 'tv'
+        ? MediaType.tv
+        : jsonMediaType == 'movie'
+            ? MediaType.movie
+            : json.containsKey('first_air_date') || json.containsKey('name')
+                ? MediaType.tv
+                : MediaType.movie;
+
     return MovieModel(
       id: json['id'] ?? 0,
       title: json['title'] ?? json['name'] ?? '',
@@ -33,6 +52,7 @@ class MovieModel {
       genreIds: (json['genre_ids'] as List<dynamic>? ?? const [])
           .map((genreId) => genreId as int)
           .toList(),
+      mediaType: parsedMediaType,
     );
   }
 

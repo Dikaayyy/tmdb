@@ -2,6 +2,7 @@ import '../datasources/tmdb_remote_datasource.dart';
 import '../models/genre_list_response_model.dart';
 import '../models/movie_detail_model.dart';
 import '../models/movie_list_response_model.dart';
+import '../models/movie_model.dart';
 
 class MovieRepository {
   MovieRepository({TmdbRemoteDatasource? remoteDatasource})
@@ -65,7 +66,25 @@ class MovieRepository {
   }
 
   Future<MovieDetailModel> getMovieDetail(int movieId) async {
-    final response = await _remoteDatasource.getMovieDetail(movieId);
+    final response = await _remoteDatasource.getMovieDetail(
+      movieId,
+      appendToResponse: 'credits',
+    );
     return MovieDetailModel.fromJson(response);
+  }
+
+  Future<MovieDetailModel> getTvDetail(int tvId) async {
+    final response = await _remoteDatasource.getTvDetail(
+      tvId,
+      appendToResponse: 'credits',
+    );
+    return MovieDetailModel.fromJson(response);
+  }
+
+  Future<MovieDetailModel> getMediaDetail(MovieModel movie) async {
+    if (movie.isTv) {
+      return getTvDetail(movie.id);
+    }
+    return getMovieDetail(movie.id);
   }
 }

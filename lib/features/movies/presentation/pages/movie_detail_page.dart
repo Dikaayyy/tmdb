@@ -27,7 +27,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   @override
   void initState() {
     super.initState();
-    _movieDetailFuture = MovieRepository().getMovieDetail(widget.movie.id);
+    _movieDetailFuture = MovieRepository().getMediaDetail(widget.movie);
     _isInWatchlist = HiveService.isInWatchlist(widget.movie.id);
   }
 
@@ -36,6 +36,56 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     setState(() {
       _isInWatchlist = HiveService.isInWatchlist(widget.movie.id);
     });
+  }
+
+  List<String> _creditNamesByJob(MovieDetailModel detail, List<String> jobs) {
+    return detail.crew
+        .where((crew) => jobs.contains(crew.job))
+        .map((crew) => crew.name)
+        .toSet()
+        .toList();
+  }
+
+  List<String> _topCharacterNames(MovieDetailModel detail, int limit) {
+    return detail.cast
+        .where((cast) => cast.character.isNotEmpty)
+        .map((cast) => cast.character)
+        .toSet()
+        .take(limit)
+        .toList();
+  }
+
+  Widget _buildCreditCard(String label, String value) {
+    return Container(
+      width: 165,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Color(0xFF71747D),
+              fontSize: 10,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Color(0xFF1F2937),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -70,7 +120,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               : detail.fullPosterUrl;
           final genresText = detail.genres.map((genre) => genre.name).join(', ');
           final releaseDate = _formatDate(detail.releaseDate);
-          final runtime = _formatRuntime(detail.runtime);
+          final durationText = _formatRuntimeOrEpisodes(detail);
           final rating = (detail.voteAverage * 10).round();
 
           return CustomScrollView(
@@ -186,7 +236,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                   ),
                                 ),
                                 Text(
-                                  runtime,
+                                  durationText,
                                   style: const TextStyle(
                                     color: Color(0xFFEEEEEE),
                                     fontSize: 10,
@@ -248,6 +298,32 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               height: 1.6,
                             ),
                       ),
+                      const SizedBox(height: 24),
+                      Divider(
+                        color: Theme.of(context).dividerColor,
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 24),
+
+                      Wrap(
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        spacing: 12,
+                        runSpacing: 12,
+                        children: [
+                          ..._creditNamesByJob(detail, ['Director'])
+                              .map((name) => _buildCreditCard('Director', name)),
+                          ..._creditNamesByJob(detail, [
+                            'Writer',
+                            'Screenplay',
+                            'Story',
+                            'Author',
+                            'Novel'
+                          ]).map((name) => _buildCreditCard('Writer', name)),
+                          ..._topCharacterNames(detail, 4)
+                              .map((name) => _buildCreditCard('Characters', name)),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -271,6 +347,14 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     final minutes = runtime % 60;
     if (hours <= 0) return '$minutes menit';
     return '$hours jam $minutes menit';
+  }
+
+  String _formatRuntimeOrEpisodes(MovieDetailModel detail) {
+    if (detail.runtime > 0) return _formatRuntime(detail.runtime);
+    if (widget.movie.isTv && detail.numberOfEpisodes > 0) {
+      return '${detail.numberOfEpisodes} episode';
+    }
+    return '-';
   }
 }
 
