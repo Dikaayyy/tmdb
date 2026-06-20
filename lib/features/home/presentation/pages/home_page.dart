@@ -23,22 +23,25 @@ class HomePage extends ConsumerWidget {
               movies.newReleaseMovies.isEmpty &&
               movies.topRatedMovies.isEmpty &&
               movies.genres.isEmpty) {
-            return const Center(
-              child: Text('No movies found'),
-            );
+            return const Center(child: Text('No movies found'));
           }
 
-          return RefreshIndicator(
-            onRefresh: () => ref.read(homeViewModelProvider.notifier).refresh(),
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                const _HomeHeader(),
-                TrendingSection(movies: movies.trendingMovies),
-                NewReleaseSection(movies: movies.newReleaseMovies),
-                TopRatedSection(movies: movies.topRatedMovies),
-                CategoriesSection(genres: movies.genres),
-              ],
+          return SafeArea(
+            bottom: false,
+            child: RefreshIndicator(
+              onRefresh: () =>
+                  ref.read(homeViewModelProvider.notifier).refresh(),
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 104),
+                children: [
+                  const _HomeHeader(),
+                  TrendingSection(movies: movies.trendingMovies),
+                  NewReleaseSection(movies: movies.newReleaseMovies),
+                  TopRatedSection(movies: movies.topRatedMovies),
+                  CategoriesSection(genres: movies.genres),
+                ],
+              ),
             ),
           );
         },
@@ -54,10 +57,7 @@ class HomePage extends ConsumerWidget {
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    '$error',
-                    textAlign: TextAlign.center,
-                  ),
+                  Text('$error', textAlign: TextAlign.center),
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: () =>
@@ -81,7 +81,7 @@ class _HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -134,15 +134,9 @@ class _HeaderIconButton extends StatelessWidget {
     return Container(
       width: 40,
       height: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(999),
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(999)),
       alignment: Alignment.center,
-      child: Image.asset(
-        assetPath,
-        width: 20,
-        height: 20,
-      ),
+      child: Image.asset(assetPath, width: 20, height: 20),
     );
   }
 }

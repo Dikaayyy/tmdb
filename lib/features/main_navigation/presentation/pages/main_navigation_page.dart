@@ -1,0 +1,48 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/floating_bottom_nav_bar.dart';
+import '../../../home/presentation/pages/home_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../watchlist/presentation/pages/watchlist_page.dart';
+
+class MainNavigationPage extends StatefulWidget {
+  const MainNavigationPage({super.key});
+
+  @override
+  State<MainNavigationPage> createState() => _MainNavigationPageState();
+}
+
+class _MainNavigationPageState extends State<MainNavigationPage> {
+  int _currentIndex = 0;
+
+  static const _items = [
+    FloatingBottomNavBarItem(label: 'Beranda', icon: Icons.home_rounded),
+    FloatingBottomNavBarItem(label: 'Watchlist', icon: Icons.bookmark_rounded),
+    FloatingBottomNavBarItem(label: 'Profil', icon: Icons.person_rounded),
+  ];
+
+  final _pages = const [HomePage(), WatchlistPage(), ProfilePage()];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBody: true,
+      body: Stack(
+        children: [
+          IndexedStack(index: _currentIndex, children: _pages),
+          Positioned.fill(
+            child: FloatingBottomNavBar(
+              currentIndex: _currentIndex,
+              items: _items,
+              onItemSelected: (index) {
+                if (_currentIndex == index) return;
+
+                setState(() => _currentIndex = index);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

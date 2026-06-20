@@ -6,7 +6,7 @@ import '../models/movie_model.dart';
 
 class MovieRepository {
   MovieRepository({TmdbRemoteDatasource? remoteDatasource})
-      : _remoteDatasource = remoteDatasource ?? TmdbRemoteDatasource();
+    : _remoteDatasource = remoteDatasource ?? TmdbRemoteDatasource();
 
   final TmdbRemoteDatasource _remoteDatasource;
 
@@ -52,7 +52,7 @@ class MovieRepository {
 
   Future<GenreListResponseModel> getTvGenres() async {
     final response = await _remoteDatasource.getTvGenres();
-    return GenreListResponseModel.fromJson(response);
+    return GenreListResponseModel.fromJson(response, isTv: true);
   }
 
   Future<MovieListResponseModel> discoverMoviesByGenre(int genreId) async {
@@ -70,7 +70,10 @@ class MovieRepository {
       movieId,
       appendToResponse: 'credits',
     );
-    final reviewResponse = await _remoteDatasource.getMovieReviews(movieId);
+    final reviewResponse = await _getFallbackMap(
+      () => _remoteDatasource.getMovieReviews(movieId),
+      fallback: {'results': const []},
+    );
     return MovieDetailModel.fromJson({
       ...detailResponse,
       'reviews': reviewResponse,
@@ -82,7 +85,10 @@ class MovieRepository {
       tvId,
       appendToResponse: 'credits',
     );
-    final reviewResponse = await _remoteDatasource.getTvReviews(tvId);
+    final reviewResponse = await _getFallbackMap(
+      () => _remoteDatasource.getTvReviews(tvId),
+      fallback: {'results': const []},
+    );
     return MovieDetailModel.fromJson({
       ...detailResponse,
       'reviews': reviewResponse,
@@ -94,5 +100,16 @@ class MovieRepository {
       return getTvDetail(movie.id);
     }
     return getMovieDetail(movie.id);
+  }
+
+  Future<Map<String, dynamic>> _getFallbackMap(
+    Future<Map<String, dynamic>> Function() request, {
+    required Map<String, dynamic> fallback,
+  }) async {
+    try {
+      return await request();
+    } catch (_) {
+      return fallback;
+    }
   }
 }
