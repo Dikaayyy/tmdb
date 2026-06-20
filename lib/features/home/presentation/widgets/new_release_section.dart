@@ -15,6 +15,7 @@ class NewReleaseSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibleMovies = movies.take(5).toList();
     final currentMonth = DateFormat('MMMM', 'id_ID').format(DateTime.now());
     final screenWidth = MediaQuery.sizeOf(context).width;
     final cardWidth = ((screenWidth - 48) * 0.42).clamp(140.0, 160.0);
@@ -33,10 +34,10 @@ class NewReleaseSection extends StatelessWidget {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: movies.length,
+            itemCount: visibleMovies.length,
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
-              final movie = movies[index];
+              final movie = visibleMovies[index];
 
               return NewReleaseMovieCard(
                 movie: movie,

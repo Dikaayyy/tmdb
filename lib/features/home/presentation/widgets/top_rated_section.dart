@@ -14,6 +14,7 @@ class TopRatedSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibleMovies = movies.take(5).toList();
     final screenWidth = MediaQuery.sizeOf(context).width;
     final cardWidth = ((screenWidth - 32) * 0.82).clamp(260.0, 330.0);
     final cardImageHeight = cardWidth * (185 / 350);
@@ -30,10 +31,10 @@ class TopRatedSection extends StatelessWidget {
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
-            itemCount: movies.length,
+            itemCount: visibleMovies.length,
             separatorBuilder: (_, __) => const SizedBox(width: 16),
             itemBuilder: (context, index) {
-              final movie = movies[index];
+              final movie = visibleMovies[index];
 
               return TopRatedMovieCard(
                 movie: movie,
