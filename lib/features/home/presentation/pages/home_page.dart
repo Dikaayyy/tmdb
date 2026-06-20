@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../widgets/new_release_section.dart';
+import '../widgets/top_rated_section.dart';
 import '../widgets/trending_section.dart';
 import '../viewmodels/home_view_model.dart';
 
@@ -18,7 +19,9 @@ class HomePage extends ConsumerWidget {
       ),
       body: moviesAsync.when(
         data: (movies) {
-          if (movies.trendingMovies.isEmpty && movies.newReleaseMovies.isEmpty) {
+          if (movies.trendingMovies.isEmpty &&
+              movies.newReleaseMovies.isEmpty &&
+              movies.topRatedMovies.isEmpty) {
             return const Center(
               child: Text('No movies found'),
             );
@@ -31,6 +34,7 @@ class HomePage extends ConsumerWidget {
               children: [
                 TrendingSection(movies: movies.trendingMovies),
                 NewReleaseSection(movies: movies.newReleaseMovies),
+                TopRatedSection(movies: movies.topRatedMovies),
               ],
             ),
           );

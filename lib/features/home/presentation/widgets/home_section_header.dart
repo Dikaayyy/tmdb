@@ -4,12 +4,12 @@ class HomeSectionHeader extends StatelessWidget {
   const HomeSectionHeader({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     this.onSeeAll,
   });
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final VoidCallback? onSeeAll;
 
   @override
@@ -33,7 +33,7 @@ class HomeSectionHeader extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                subtitle,
+                subtitle ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: const Color(0xFF71747D),
                       height: 1.5,

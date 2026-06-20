@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_model.dart';
 import 'movie_image_scrim.dart';
 
-class FeaturedMovieCard extends StatelessWidget {
-  const FeaturedMovieCard({
+class TopRatedMovieCard extends StatelessWidget {
+  const TopRatedMovieCard({
     super.key,
     required this.movie,
     required this.width,
@@ -19,7 +20,9 @@ class FeaturedMovieCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final imageHeight = width * (200 / 310);
+    final imageHeight = width * (185 / 350);
+    final formattedDate = _formatReleaseDate(movie.releaseDate);
+    final score = (movie.voteAverage * 10).round();
 
     return SizedBox(
       width: width,
@@ -55,21 +58,15 @@ class FeaturedMovieCard extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      _CardImage(movie: movie),
+                      _TopRatedImage(movie: movie),
                       const MovieImageScrim(),
-                      MovieImageScrim(
-                        padding: const EdgeInsets.all(16),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: _RatingBadge(voteAverage: movie.voteAverage),
-                        ),
-                      ),
+                      const MovieImageScrim(),
                     ],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -85,16 +82,35 @@ class FeaturedMovieCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      movie.overview.isEmpty
-                          ? 'No overview available.'
-                          : movie.overview,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                        height: 1.5,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          formattedDate,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: AppColors.textSecondary,
+                            height: 1.5,
+                          ),
+                        ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.star_rounded,
+                              size: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              '$score%',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: AppColors.textSecondary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -105,10 +121,19 @@ class FeaturedMovieCard extends StatelessWidget {
       ),
     );
   }
+
+  String _formatReleaseDate(String rawDate) {
+    if (rawDate.isEmpty) return 'Tanggal tidak tersedia';
+
+    final parsedDate = DateTime.tryParse(rawDate);
+    if (parsedDate == null) return rawDate;
+
+    return DateFormat('MMM dd, yyyy', 'en_US').format(parsedDate);
+  }
 }
 
-class _CardImage extends StatelessWidget {
-  const _CardImage({required this.movie});
+class _TopRatedImage extends StatelessWidget {
+  const _TopRatedImage({required this.movie});
 
   final MovieModel movie;
 
@@ -144,54 +169,6 @@ class _CardImage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _RatingBadge extends StatelessWidget {
-  const _RatingBadge({required this.voteAverage});
-
-  final double voteAverage;
-
-  @override
-  Widget build(BuildContext context) {
-    final percentage = (voteAverage * 10).round();
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: ShapeDecoration(
-        color: AppColors.secondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.star_rounded,
-            size: 12,
-            color: Color(0xFF713F12),
-          ),
-          const SizedBox(width: 2),
-          Text(
-            '$percentage%',
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF713F12),
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

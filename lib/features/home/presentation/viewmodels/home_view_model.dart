@@ -26,11 +26,13 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
     final results = await Future.wait([
       repository.getTrendingMovies(),
       repository.getNowPlayingMovies(),
+      repository.getTopRatedMovies(),
     ]);
 
     return HomeState(
       trendingMovies: results[0].movies,
       newReleaseMovies: results[1].movies,
+      topRatedMovies: results[2].movies,
     );
   }
 }
