@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../movies/data/models/movie_model.dart';
+import '../../../movies/presentation/pages/movie_detail_page.dart';
 import '../../../movies/presentation/widgets/featured_movie_card.dart';
 import '../viewmodels/home_view_model.dart';
 import '../widgets/see_all_loading_skeleton.dart';
@@ -218,6 +219,13 @@ class _SeeAllPageState extends ConsumerState<SeeAllPage> {
                           return FeaturedMovieCard(
                             movie: movie,
                             width: featuredWidth,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => MovieDetailPage(movie: movie),
+                                ),
+                              );
+                            },
                           );
                         },
                       );

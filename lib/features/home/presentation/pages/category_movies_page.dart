@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/movie_model.dart';
+import '../../../movies/presentation/pages/movie_detail_page.dart';
 import '../../../movies/presentation/widgets/featured_movie_card.dart';
 import '../viewmodels/home_view_model.dart';
 import '../widgets/see_all_category_tabs.dart';
@@ -170,6 +171,13 @@ class _CategoryMoviesPageState extends ConsumerState<CategoryMoviesPage> {
                           return FeaturedMovieCard(
                             movie: movie,
                             width: contentWidth,
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => MovieDetailPage(movie: movie),
+                                ),
+                              );
+                            },
                           );
                         },
                       );
