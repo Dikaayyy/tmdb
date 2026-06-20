@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../pages/see_all_page.dart';
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/presentation/widgets/new_release_movie_card.dart';
 import 'home_section_header.dart';
@@ -27,6 +28,20 @@ class NewReleaseSection extends StatelessWidget {
         HomeSectionHeader(
           title: 'Baru Rilis',
           subtitle: currentMonth,
+          onSeeAll: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SeeAllPage(
+                  args: SeeAllPageArgs(
+                    sectionType: SeeAllSectionType.newRelease,
+                    title: 'Baru Rilis',
+                    subtitle: currentMonth,
+                    movies: movies,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 12),
         SizedBox(

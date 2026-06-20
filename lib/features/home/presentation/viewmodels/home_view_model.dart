@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/genre_list_response_model.dart';
+import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/data/models/movie_list_response_model.dart';
 import '../../../movies/data/repositories/movie_repository.dart';
 import 'home_state.dart';
@@ -30,6 +31,7 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
       repository.getTrendingMovies(),
       repository.getNowPlayingMovies(),
       repository.getTopRatedMovies(),
+      repository.getTopRatedTv(),
       repository.getMovieGenres(),
       repository.getTvGenres(),
     ]);
@@ -37,8 +39,9 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
     final trendingResponse = results[0] as MovieListResponseModel;
     final newReleaseResponse = results[1] as MovieListResponseModel;
     final topRatedResponse = results[2] as MovieListResponseModel;
-    final movieGenresResponse = results[3] as GenreListResponseModel;
-    final tvGenresResponse = results[4] as GenreListResponseModel;
+    final topRatedTvResponse = results[3] as MovieListResponseModel;
+    final movieGenresResponse = results[4] as GenreListResponseModel;
+    final tvGenresResponse = results[5] as GenreListResponseModel;
 
     final combinedGenres = [
       ...movieGenresResponse.genres,
@@ -51,10 +54,31 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
 
     return HomeState(
       trendingMovies: trendingResponse.movies,
-      newReleaseMovies: newReleaseResponse.movies,
-      topRatedMovies: topRatedResponse.movies,
+      newReleaseMovies: _sortByNewest(newReleaseResponse.movies),
+      topRatedMovies: _sortByTopRated([
+        ...topRatedResponse.movies,
+        ...topRatedTvResponse.movies,
+      ]),
       genres: uniqueGenresByName.values.toList()
         ..sort((a, b) => a.name.compareTo(b.name)),
     );
+  }
+
+  List<MovieModel> _sortByNewest(List<MovieModel> movies) {
+    final sortedMovies = [...movies];
+    sortedMovies.sort(
+      (a, b) => _parseDate(b.releaseDate).compareTo(_parseDate(a.releaseDate)),
+    );
+    return sortedMovies;
+  }
+
+  List<MovieModel> _sortByTopRated(List<MovieModel> movies) {
+    final sortedMovies = [...movies];
+    sortedMovies.sort((a, b) => b.voteAverage.compareTo(a.voteAverage));
+    return sortedMovies;
+  }
+
+  DateTime _parseDate(String rawDate) {
+    return DateTime.tryParse(rawDate) ?? DateTime.fromMillisecondsSinceEpoch(0);
   }
 }

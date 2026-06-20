@@ -1,8 +1,18 @@
 import '../../../../core/network/dio_client.dart';
 
 class TmdbRemoteDatasource {
+  Future<Map<String, dynamic>> getTrendingAll() async {
+    final response = await DioClient.instance.get('/trending/all/day');
+    return response.data;
+  }
+
   Future<Map<String, dynamic>> getTrendingMovies() async {
     final response = await DioClient.instance.get('/trending/movie/day');
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> getTrendingTv() async {
+    final response = await DioClient.instance.get('/trending/tv/day');
     return response.data;
   }
 
@@ -11,8 +21,18 @@ class TmdbRemoteDatasource {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> getOnTheAirTv() async {
+    final response = await DioClient.instance.get('/tv/on_the_air');
+    return response.data;
+  }
+
   Future<Map<String, dynamic>> getTopRatedMovies() async {
     final response = await DioClient.instance.get('/movie/top_rated');
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> getTopRatedTv() async {
+    final response = await DioClient.instance.get('/tv/top_rated');
     return response.data;
   }
 

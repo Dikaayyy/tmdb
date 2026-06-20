@@ -29,7 +29,7 @@ class MovieModel {
       posterPath: json['poster_path'] ?? '',
       backdropPath: json['backdrop_path'] ?? '',
       voteAverage: (json['vote_average'] ?? 0).toDouble(),
-      releaseDate: json['release_date'] ?? '',
+      releaseDate: json['release_date'] ?? json['first_air_date'] ?? '',
       genreIds: (json['genre_ids'] as List<dynamic>? ?? const [])
           .map((genreId) => genreId as int)
           .toList(),

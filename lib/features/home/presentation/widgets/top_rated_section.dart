@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/see_all_page.dart';
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/presentation/widgets/top_rated_movie_card.dart';
 import 'home_section_header.dart';
@@ -22,8 +23,23 @@ class TopRatedSection extends StatelessWidget {
 
     return Column(
       children: [
-        const HomeSectionHeader(
+        HomeSectionHeader(
           title: 'Rating Tertinggi',
+          subtitle: 'Pilihan Pengguna',
+          onSeeAll: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SeeAllPage(
+                  args: SeeAllPageArgs(
+                    sectionType: SeeAllSectionType.topRated,
+                    title: 'Rating Tertinggi',
+                    subtitle: 'Pilihan Pengguna',
+                    movies: movies,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 12),
         SizedBox(

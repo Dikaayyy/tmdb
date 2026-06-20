@@ -8,8 +8,18 @@ class MovieRepository {
 
   final TmdbRemoteDatasource _remoteDatasource;
 
+  Future<MovieListResponseModel> getTrendingAll() async {
+    final response = await _remoteDatasource.getTrendingAll();
+    return MovieListResponseModel.fromJson(response);
+  }
+
   Future<MovieListResponseModel> getTrendingMovies() async {
     final response = await _remoteDatasource.getTrendingMovies();
+    return MovieListResponseModel.fromJson(response);
+  }
+
+  Future<MovieListResponseModel> getTrendingTv() async {
+    final response = await _remoteDatasource.getTrendingTv();
     return MovieListResponseModel.fromJson(response);
   }
 
@@ -18,8 +28,18 @@ class MovieRepository {
     return MovieListResponseModel.fromJson(response);
   }
 
+  Future<MovieListResponseModel> getOnTheAirTv() async {
+    final response = await _remoteDatasource.getOnTheAirTv();
+    return MovieListResponseModel.fromJson(response);
+  }
+
   Future<MovieListResponseModel> getTopRatedMovies() async {
     final response = await _remoteDatasource.getTopRatedMovies();
+    return MovieListResponseModel.fromJson(response);
+  }
+
+  Future<MovieListResponseModel> getTopRatedTv() async {
+    final response = await _remoteDatasource.getTopRatedTv();
     return MovieListResponseModel.fromJson(response);
   }
 

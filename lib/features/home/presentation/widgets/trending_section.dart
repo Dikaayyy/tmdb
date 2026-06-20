@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/see_all_page.dart';
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/presentation/widgets/featured_movie_card.dart';
 import 'home_section_header.dart';
@@ -23,9 +24,23 @@ class TrendingSection extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 12),
-        const HomeSectionHeader(
+        HomeSectionHeader(
           title: 'Trending',
           subtitle: 'Hari Ini',
+          onSeeAll: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => SeeAllPage(
+                  args: SeeAllPageArgs(
+                    sectionType: SeeAllSectionType.trending,
+                    title: 'Trending',
+                    subtitle: 'Hari Ini',
+                    movies: movies,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
         const SizedBox(height: 16),
         SizedBox(
