@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/storage/hive_service.dart';
+import '../../../../core/widgets/error_state_view.dart';
 import '../../data/models/movie_detail_model.dart';
 import '../../data/models/movie_model.dart';
 import '../../data/repositories/movie_repository.dart';
@@ -76,11 +77,15 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           }
 
           if (snapshot.hasError) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Text('${snapshot.error}', textAlign: TextAlign.center),
-              ),
+            return ErrorStateView(
+              message: '${snapshot.error}',
+              onRetry: () {
+                setState(() {
+                  _movieDetailFuture = MovieRepository().getMediaDetail(
+                    widget.movie,
+                  );
+                });
+              },
             );
           }
 

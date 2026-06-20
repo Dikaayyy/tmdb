@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_state_view.dart';
 import '../widgets/categories_section.dart';
 import '../widgets/home_loading_skeleton.dart';
 import '../widgets/new_release_section.dart';
@@ -46,27 +47,9 @@ class HomePage extends ConsumerWidget {
           );
         },
         error: (error, _) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Failed to load movies',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-                  Text('$error', textAlign: TextAlign.center),
-                  const SizedBox(height: 16),
-                  FilledButton(
-                    onPressed: () =>
-                        ref.read(homeViewModelProvider.notifier).refresh(),
-                    child: const Text('Try again'),
-                  ),
-                ],
-              ),
-            ),
+          return ErrorStateView(
+            message: '$error',
+            onRetry: () => ref.read(homeViewModelProvider.notifier).refresh(),
           );
         },
         loading: () => const HomeLoadingSkeleton(),

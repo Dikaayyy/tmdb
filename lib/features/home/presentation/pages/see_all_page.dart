@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_state_view.dart';
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
 import '../../../movies/presentation/widgets/featured_movie_card.dart';
@@ -9,11 +10,7 @@ import '../viewmodels/home_view_model.dart';
 import '../widgets/see_all_loading_skeleton.dart';
 import '../widgets/see_all_category_tabs.dart';
 
-enum SeeAllSectionType {
-  trending,
-  newRelease,
-  topRated;
-}
+enum SeeAllSectionType { trending, newRelease, topRated }
 
 class SeeAllPageArgs {
   const SeeAllPageArgs({
@@ -30,10 +27,7 @@ class SeeAllPageArgs {
 }
 
 class SeeAllPage extends ConsumerStatefulWidget {
-  const SeeAllPage({
-    super.key,
-    required this.args,
-  });
+  const SeeAllPage({super.key, required this.args});
 
   final SeeAllPageArgs args;
 
@@ -74,7 +68,9 @@ class _SeeAllPageState extends ConsumerState<SeeAllPage> {
             ]);
             return _sortByNewest([...results[0].movies, ...results[1].movies]);
           case SeeAllCategory.movie:
-            return _sortByNewest((await repository.getNowPlayingMovies()).movies);
+            return _sortByNewest(
+              (await repository.getNowPlayingMovies()).movies,
+            );
           case SeeAllCategory.tv:
             return _sortByNewest((await repository.getOnTheAirTv()).movies);
         }
@@ -85,9 +81,14 @@ class _SeeAllPageState extends ConsumerState<SeeAllPage> {
               repository.getTopRatedMovies(),
               repository.getTopRatedTv(),
             ]);
-            return _sortByTopRated([...results[0].movies, ...results[1].movies]);
+            return _sortByTopRated([
+              ...results[0].movies,
+              ...results[1].movies,
+            ]);
           case SeeAllCategory.movie:
-            return _sortByTopRated((await repository.getTopRatedMovies()).movies);
+            return _sortByTopRated(
+              (await repository.getTopRatedMovies()).movies,
+            );
           case SeeAllCategory.tv:
             return _sortByTopRated((await repository.getTopRatedTv()).movies);
         }
@@ -154,20 +155,25 @@ class _SeeAllPageState extends ConsumerState<SeeAllPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                             ),
                         children: [
                           TextSpan(
                             text: widget.args.title,
-                            style: const TextStyle(color: AppColors.textPrimary),
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                           if ((widget.args.subtitle ?? '').isNotEmpty) ...[
                             const TextSpan(text: ' '),
                             TextSpan(
                               text: widget.args.subtitle!,
-                              style: const TextStyle(color: AppColors.textPrimary),
+                              style: const TextStyle(
+                                color: AppColors.textPrimary,
+                              ),
                             ),
                           ],
                         ],
@@ -196,14 +202,13 @@ class _SeeAllPageState extends ConsumerState<SeeAllPage> {
                       }
 
                       if (snapshot.hasError) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Text(
-                              '${snapshot.error}',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                        return ErrorStateView(
+                          message: '${snapshot.error}',
+                          onRetry: () {
+                            setState(() {
+                              _moviesFuture = _fetchMovies();
+                            });
+                          },
                         );
                       }
 

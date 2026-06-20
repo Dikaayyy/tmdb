@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/error_state_view.dart';
 import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
@@ -11,10 +12,7 @@ import '../widgets/see_all_category_tabs.dart';
 import '../widgets/see_all_loading_skeleton.dart';
 
 class CategoryMoviesPage extends ConsumerStatefulWidget {
-  const CategoryMoviesPage({
-    super.key,
-    required this.genre,
-  });
+  const CategoryMoviesPage({super.key, required this.genre});
 
   final GenreModel genre;
 
@@ -39,16 +37,22 @@ class _CategoryMoviesPageState extends ConsumerState<CategoryMoviesPage> {
     switch (_selectedCategory) {
       case SeeAllCategory.all:
         final movieResults = widget.genre.movieGenreId != null
-            ? (await repository.discoverMoviesByGenre(widget.genre.movieGenreId!)).movies
+            ? (await repository.discoverMoviesByGenre(
+                widget.genre.movieGenreId!,
+              )).movies
             : <MovieModel>[];
         final tvResults = widget.genre.tvGenreId != null
-            ? (await repository.discoverTvByGenre(widget.genre.tvGenreId!)).movies
+            ? (await repository.discoverTvByGenre(
+                widget.genre.tvGenreId!,
+              )).movies
             : <MovieModel>[];
         return _sortByNewest([...movieResults, ...tvResults]);
       case SeeAllCategory.movie:
         if (widget.genre.movieGenreId == null) return const <MovieModel>[];
         return _sortByNewest(
-          (await repository.discoverMoviesByGenre(widget.genre.movieGenreId!)).movies,
+          (await repository.discoverMoviesByGenre(
+            widget.genre.movieGenreId!,
+          )).movies,
         );
       case SeeAllCategory.tv:
         if (widget.genre.tvGenreId == null) return const <MovieModel>[];
@@ -111,14 +115,17 @@ class _CategoryMoviesPageState extends ConsumerState<CategoryMoviesPage> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                             ),
                         children: [
                           TextSpan(
                             text: widget.genre.name,
-                            style: const TextStyle(color: AppColors.textPrimary),
+                            style: const TextStyle(
+                              color: AppColors.textPrimary,
+                            ),
                           ),
                         ],
                       ),
@@ -145,14 +152,13 @@ class _CategoryMoviesPageState extends ConsumerState<CategoryMoviesPage> {
                       }
 
                       if (snapshot.hasError) {
-                        return Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Text(
-                              '${snapshot.error}',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                        return ErrorStateView(
+                          message: '${snapshot.error}',
+                          onRetry: () {
+                            setState(() {
+                              _moviesFuture = _fetchMovies();
+                            });
+                          },
                         );
                       }
 

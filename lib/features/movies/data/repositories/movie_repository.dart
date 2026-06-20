@@ -1,3 +1,4 @@
+import '../../../../core/network/network_error_handler.dart';
 import '../datasources/tmdb_remote_datasource.dart';
 import '../models/genre_list_response_model.dart';
 import '../models/movie_detail_model.dart';
@@ -12,57 +13,57 @@ class MovieRepository {
 
   Future<MovieListResponseModel> getTrendingAll() async {
     final response = await _remoteDatasource.getTrendingAll();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'trending');
   }
 
   Future<MovieListResponseModel> getTrendingMovies() async {
     final response = await _remoteDatasource.getTrendingMovies();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'trending movie');
   }
 
   Future<MovieListResponseModel> getTrendingTv() async {
     final response = await _remoteDatasource.getTrendingTv();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'trending TV');
   }
 
   Future<MovieListResponseModel> getNowPlayingMovies() async {
     final response = await _remoteDatasource.getNowPlayingMovies();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'new release movie');
   }
 
   Future<MovieListResponseModel> getOnTheAirTv() async {
     final response = await _remoteDatasource.getOnTheAirTv();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'new release TV');
   }
 
   Future<MovieListResponseModel> getTopRatedMovies() async {
     final response = await _remoteDatasource.getTopRatedMovies();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'top rated movie');
   }
 
   Future<MovieListResponseModel> getTopRatedTv() async {
     final response = await _remoteDatasource.getTopRatedTv();
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'top rated TV');
   }
 
   Future<GenreListResponseModel> getMovieGenres() async {
     final response = await _remoteDatasource.getMovieGenres();
-    return GenreListResponseModel.fromJson(response);
+    return _parseGenreList(response);
   }
 
   Future<GenreListResponseModel> getTvGenres() async {
     final response = await _remoteDatasource.getTvGenres();
-    return GenreListResponseModel.fromJson(response, isTv: true);
+    return _parseGenreList(response, isTv: true);
   }
 
   Future<MovieListResponseModel> discoverMoviesByGenre(int genreId) async {
     final response = await _remoteDatasource.discoverMoviesByGenre(genreId);
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'genre movie');
   }
 
   Future<MovieListResponseModel> discoverTvByGenre(int genreId) async {
     final response = await _remoteDatasource.discoverTvByGenre(genreId);
-    return MovieListResponseModel.fromJson(response);
+    return _parseMovieList(response, 'genre TV');
   }
 
   Future<MovieDetailModel> getMovieDetail(int movieId) async {
@@ -111,5 +112,27 @@ class MovieRepository {
     } catch (_) {
       return fallback;
     }
+  }
+
+  MovieListResponseModel _parseMovieList(
+    Map<String, dynamic> response,
+    String context,
+  ) {
+    final model = MovieListResponseModel.fromJson(response);
+    if (model.movies.isEmpty) {
+      throw NetworkErrorHandler.emptyData(context);
+    }
+    return model;
+  }
+
+  GenreListResponseModel _parseGenreList(
+    Map<String, dynamic> response, {
+    bool isTv = false,
+  }) {
+    final model = GenreListResponseModel.fromJson(response, isTv: isTv);
+    if (model.genres.isEmpty) {
+      throw NetworkErrorHandler.emptyData('genre');
+    }
+    return model;
   }
 }
