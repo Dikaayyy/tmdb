@@ -1,5 +1,5 @@
-name: tmdb
-description: "A new Flutter project."
+name: TMDB
+description: "Movie and TV Show App"
 publish_to: 'none'
 version: 0.1.0
 
