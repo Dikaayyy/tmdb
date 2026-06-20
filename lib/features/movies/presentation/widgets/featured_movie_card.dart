@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_model.dart';
 import 'movie_image_scrim.dart';
+import 'movie_network_image_frame.dart';
 
 class FeaturedMovieCard extends StatelessWidget {
   const FeaturedMovieCard({
@@ -55,14 +56,26 @@ class FeaturedMovieCard extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      _CardImage(movie: movie),
-                      const MovieImageScrim(),
-                      MovieImageScrim(
-                        padding: const EdgeInsets.all(16),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: _RatingBadge(voteAverage: movie.voteAverage),
-                        ),
+                      MovieNetworkImageFrame(
+                        imageUrl: movie.fullBackdropUrl.isNotEmpty
+                            ? movie.fullBackdropUrl
+                            : movie.fullPosterUrl,
+                        fit: BoxFit.cover,
+                        overlayBuilder: (_) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              const MovieImageScrim(),
+                              MovieImageScrim(
+                                padding: const EdgeInsets.all(16),
+                                child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: _RatingBadge(voteAverage: movie.voteAverage),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -103,47 +116,6 @@ class FeaturedMovieCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CardImage extends StatelessWidget {
-  const _CardImage({required this.movie});
-
-  final MovieModel movie;
-
-  @override
-  Widget build(BuildContext context) {
-    final imageUrl = movie.fullBackdropUrl.isNotEmpty
-        ? movie.fullBackdropUrl
-        : movie.fullPosterUrl;
-
-    if (imageUrl.isEmpty) {
-      return Container(
-        color: AppColors.background,
-        alignment: Alignment.center,
-        child: const Icon(
-          Icons.movie_outlined,
-          size: 40,
-          color: Color(0xFF6B7280),
-        ),
-      );
-    }
-
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) {
-        return Container(
-          color: AppColors.background,
-          alignment: Alignment.center,
-          child: const Icon(
-            Icons.broken_image_outlined,
-            size: 40,
-            color: Color(0xFF6B7280),
-          ),
-        );
-      },
     );
   }
 }

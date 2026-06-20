@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_model.dart';
 import 'movie_image_scrim.dart';
+import 'movie_network_image_frame.dart';
 
 class TopRatedMovieCard extends StatelessWidget {
   const TopRatedMovieCard({
@@ -58,9 +59,21 @@ class TopRatedMovieCard extends StatelessWidget {
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      _TopRatedImage(movie: movie),
-                      const MovieImageScrim(),
-                      const MovieImageScrim(),
+                      MovieNetworkImageFrame(
+                        imageUrl: movie.fullBackdropUrl.isNotEmpty
+                            ? movie.fullBackdropUrl
+                            : movie.fullPosterUrl,
+                        fit: BoxFit.cover,
+                        overlayBuilder: (_) {
+                          return const Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              MovieImageScrim(),
+                              MovieImageScrim(),
+                            ],
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -129,46 +142,5 @@ class TopRatedMovieCard extends StatelessWidget {
     if (parsedDate == null) return rawDate;
 
     return DateFormat('MMM dd, yyyy', 'en_US').format(parsedDate);
-  }
-}
-
-class _TopRatedImage extends StatelessWidget {
-  const _TopRatedImage({required this.movie});
-
-  final MovieModel movie;
-
-  @override
-  Widget build(BuildContext context) {
-    final imageUrl = movie.fullBackdropUrl.isNotEmpty
-        ? movie.fullBackdropUrl
-        : movie.fullPosterUrl;
-
-    if (imageUrl.isEmpty) {
-      return Container(
-        color: AppColors.background,
-        alignment: Alignment.center,
-        child: const Icon(
-          Icons.movie_outlined,
-          size: 40,
-          color: Color(0xFF6B7280),
-        ),
-      );
-    }
-
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) {
-        return Container(
-          color: AppColors.background,
-          alignment: Alignment.center,
-          child: const Icon(
-            Icons.broken_image_outlined,
-            size: 40,
-            color: Color(0xFF6B7280),
-          ),
-        );
-      },
-    );
   }
 }
