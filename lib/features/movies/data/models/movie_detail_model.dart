@@ -92,16 +92,24 @@ class CrewModel {
   const CrewModel({
     required this.name,
     required this.job,
+    required this.profilePath,
   });
 
   final String name;
   final String job;
+  final String profilePath;
 
   factory CrewModel.fromJson(Map<String, dynamic> json) {
     return CrewModel(
       name: json['name'] ?? '',
       job: json['job'] ?? '',
+      profilePath: json['profile_path'] ?? '',
     );
+  }
+
+  String get fullProfileUrl {
+    if (profilePath.isEmpty) return '';
+    return '${ApiConstants.imageUrl}$profilePath';
   }
 }
 
@@ -109,15 +117,23 @@ class CastModel {
   const CastModel({
     required this.name,
     required this.character,
+    required this.profilePath,
   });
 
   final String name;
   final String character;
+  final String profilePath;
 
   factory CastModel.fromJson(Map<String, dynamic> json) {
     return CastModel(
       name: json['name'] ?? '',
       character: json['character'] ?? '',
+      profilePath: json['profile_path'] ?? '',
     );
+  }
+
+  String get fullProfileUrl {
+    if (profilePath.isEmpty) return '';
+    return '${ApiConstants.imageUrl}$profilePath';
   }
 }

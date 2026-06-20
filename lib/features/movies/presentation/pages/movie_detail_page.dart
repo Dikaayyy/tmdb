@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_detail_model.dart';
 import '../../data/models/movie_model.dart';
 import '../../data/repositories/movie_repository.dart';
+import '../widgets/cast_crew_card.dart';
 import '../widgets/movie_network_image_frame.dart';
 
 class MovieDetailPage extends StatefulWidget {
@@ -53,6 +54,32 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         .toSet()
         .take(limit)
         .toList();
+  }
+
+  List<_CastCrewItem> _castCrewItems(MovieDetailModel detail) {
+    final castItems = detail.cast
+        .where((cast) => cast.name.isNotEmpty)
+        .take(5)
+        .map(
+          (cast) => _CastCrewItem(
+            name: cast.name,
+            role: cast.character.isEmpty ? 'Pemeran' : cast.character,
+            imageUrl: cast.fullProfileUrl,
+          ),
+        );
+
+    final crewItems = detail.crew
+        .where((crew) => crew.name.isNotEmpty && crew.job.isNotEmpty)
+        .take(5)
+        .map(
+          (crew) => _CastCrewItem(
+            name: crew.name,
+            role: crew.job,
+            imageUrl: crew.fullProfileUrl,
+          ),
+        );
+
+    return [...castItems, ...crewItems].take(5).toList();
   }
 
   Widget _buildCreditCard(String label, String value) {
@@ -122,6 +149,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           final releaseDate = _formatDate(detail.releaseDate);
           final durationText = _formatRuntimeOrEpisodes(detail);
           final rating = (detail.voteAverage * 10).round();
+          final castCrewItems = _castCrewItems(detail);
 
           return CustomScrollView(
             slivers: [
@@ -324,6 +352,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                               .map((name) => _buildCreditCard('Characters', name)),
                         ],
                       ),
+                      if (castCrewItems.isNotEmpty) ...[
+                        const SizedBox(height: 32),
+                        _CastCrewSection(items: castCrewItems),
+                      ],
                     ],
                   ),
                 ),
@@ -355,6 +387,98 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       return '${detail.numberOfEpisodes} episode';
     }
     return '-';
+  }
+}
+
+class _CastCrewSection extends StatelessWidget {
+  const _CastCrewSection({required this.items});
+
+  final List<_CastCrewItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _CastCrewSectionHeader(),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 202,
+          child: ListView.separated(
+            clipBehavior: Clip.none,
+            padding: EdgeInsets.zero,
+            scrollDirection: Axis.horizontal,
+            itemCount: items.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final item = items[index];
+
+              return CastCrewCard(
+                name: item.name,
+                role: item.role,
+                imageUrl: item.imageUrl,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CastCrewItem {
+  const _CastCrewItem({
+    required this.name,
+    required this.role,
+    required this.imageUrl,
+  });
+
+  final String name;
+  final String role;
+  final String imageUrl;
+}
+
+class _CastCrewSectionHeader extends StatelessWidget {
+  const _CastCrewSectionHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Pemeran & Kru',
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w700,
+              ),
+        ),
+        TextButton.icon(
+          onPressed: () {},
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: const Size(0, 32),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            alignment: Alignment.centerRight,
+          ),
+          iconAlignment: IconAlignment.end,
+          label: const Text(
+            'Lihat Semua',
+            style: TextStyle(
+              color: AppColors.primary,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          icon: const Icon(
+            Icons.chevron_right,
+            size: 14,
+            color: AppColors.primary,
+          ),
+        ),
+      ],
+    );
   }
 }
 
