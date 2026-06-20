@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../widgets/categories_section.dart';
 import '../widgets/new_release_section.dart';
 import '../widgets/top_rated_section.dart';
@@ -15,9 +16,6 @@ class HomePage extends ConsumerWidget {
     final moviesAsync = ref.watch(homeViewModelProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Trending Movies'),
-      ),
       body: moviesAsync.when(
         data: (movies) {
           if (movies.trendingMovies.isEmpty &&
@@ -34,6 +32,7 @@ class HomePage extends ConsumerWidget {
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
+                const _HomeHeader(),
                 TrendingSection(movies: movies.trendingMovies),
                 NewReleaseSection(movies: movies.newReleaseMovies),
                 TopRatedSection(movies: movies.topRatedMovies),
@@ -72,6 +71,78 @@ class HomePage extends ConsumerWidget {
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
+      ),
+    );
+  }
+}
+
+class _HomeHeader extends StatelessWidget {
+  const _HomeHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Transform.rotate(
+                angle: -0.17,
+                child: SizedBox(
+                  width: 27.62,
+                  height: 27.62,
+                  child: const Image(
+                    image: AssetImage('assets/images/logo.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 4),
+              const Text(
+                'TMDB',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const Row(
+            children: [
+              _HeaderIconButton(assetPath: 'assets/icons/notification.png'),
+              SizedBox(width: 4),
+              _HeaderIconButton(assetPath: 'assets/icons/search.png'),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderIconButton extends StatelessWidget {
+  const _HeaderIconButton({required this.assetPath});
+
+  final String assetPath;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(999),
+      ),
+      alignment: Alignment.center,
+      child: Image.asset(
+        assetPath,
+        width: 20,
+        height: 20,
       ),
     );
   }

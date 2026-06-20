@@ -21,7 +21,7 @@ class TrendingSection extends StatelessWidget {
 
     return Column(
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         const HomeSectionHeader(
           title: 'Trending',
           subtitle: 'Hari Ini',
