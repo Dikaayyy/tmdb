@@ -11,6 +11,8 @@ class MovieDetailActionChip extends StatelessWidget {
     required this.label,
     required this.textColor,
     required this.onTap,
+    this.borderColor,
+    this.iconColor,
   });
 
   final Color backgroundColor;
@@ -18,6 +20,8 @@ class MovieDetailActionChip extends StatelessWidget {
   final String label;
   final Color textColor;
   final VoidCallback onTap;
+  final Color? borderColor;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +34,14 @@ class MovieDetailActionChip extends StatelessWidget {
         decoration: ShapeDecoration(
           color: backgroundColor,
           shape: RoundedRectangleBorder(
+            side: BorderSide(color: borderColor ?? Colors.transparent),
             borderRadius: BorderRadius.circular(999),
           ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 16, color: textColor),
+            Icon(icon, size: 16, color: iconColor ?? textColor),
             const SizedBox(width: 4),
             Text(
               label,
@@ -70,7 +75,11 @@ class MovieDetailRatingChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(iconly.IconlyBold.star, size: 12, color: Color(0xFF713F12)),
+          const Icon(
+            iconly.IconlyBold.star,
+            size: 12,
+            color: Color(0xFF713F12),
+          ),
           const SizedBox(width: 4),
           Text(
             '$rating%',

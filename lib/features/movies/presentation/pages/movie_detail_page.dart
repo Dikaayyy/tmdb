@@ -1,41 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/storage/hive_service.dart';
 import '../../../../core/widgets/error_state_view.dart';
 import '../../data/models/movie_detail_model.dart';
 import '../../data/models/movie_model.dart';
 import '../../data/repositories/movie_repository.dart';
+import '../../../watchlist/data/models/watchlist_movie_model.dart';
+import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../widgets/movie_detail_cast_crew_section.dart';
 import '../widgets/movie_detail_content.dart';
 import '../widgets/movie_detail_hero.dart';
 import '../widgets/movie_detail_loading_skeleton.dart';
 
-class MovieDetailPage extends StatefulWidget {
+class MovieDetailPage extends ConsumerStatefulWidget {
   const MovieDetailPage({super.key, required this.movie});
 
   final MovieModel movie;
 
   @override
-  State<MovieDetailPage> createState() => _MovieDetailPageState();
+  ConsumerState<MovieDetailPage> createState() => _MovieDetailPageState();
 }
 
-class _MovieDetailPageState extends State<MovieDetailPage> {
+class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
   late Future<MovieDetailModel> _movieDetailFuture;
-  bool _isInWatchlist = false;
 
   @override
   void initState() {
     super.initState();
     _movieDetailFuture = MovieRepository().getMediaDetail(widget.movie);
-    _isInWatchlist = HiveService.isInWatchlist(widget.movie.id);
   }
 
-  Future<void> _toggleWatchlist() async {
-    await HiveService.toggleWatchlistMovie(widget.movie.id);
-    setState(() {
-      _isInWatchlist = HiveService.isInWatchlist(widget.movie.id);
-    });
+  Future<void> _toggleWatchlist(MovieDetailModel detail) async {
+    await ref
+        .read(watchlistViewModelProvider.notifier)
+        .toggleWatchlist(
+          WatchlistMovieModel.fromDetail(
+            detail,
+            mediaType: widget.movie.mediaType,
+          ),
+        );
+
+    if (!mounted) return;
   }
 
   List<MovieDetailCastCrewItem> _castCrewItems(MovieDetailModel detail) {
@@ -66,6 +72,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final watchlistMovies = ref.watch(watchlistViewModelProvider);
+
     return Scaffold(
       body: FutureBuilder<MovieDetailModel>(
         future: _movieDetailFuture,
@@ -104,6 +112,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           final durationText = _formatRuntimeOrEpisodes(detail);
           final rating = (detail.voteAverage * 10).round();
           final castCrewItems = _castCrewItems(detail);
+          final isInWatchlist = watchlistMovies.any(
+            (movie) => movie.id == widget.movie.id,
+          );
 
           return CustomScrollView(
             slivers: [
@@ -115,9 +126,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   releaseDate: releaseDate,
                   durationText: durationText,
                   rating: rating,
-                  isInWatchlist: _isInWatchlist,
+                  isInWatchlist: isInWatchlist,
                   onBackTap: () => Navigator.of(context).pop(),
-                  onWatchlistTap: _toggleWatchlist,
+                  onWatchlistTap: () => _toggleWatchlist(detail),
                 ),
               ),
               SliverToBoxAdapter(

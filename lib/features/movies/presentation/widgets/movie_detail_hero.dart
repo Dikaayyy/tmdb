@@ -117,9 +117,13 @@ class MovieDetailHero extends StatelessWidget {
                     ),
                     MovieDetailActionChip(
                       backgroundColor: Colors.white.withValues(alpha: 0.25),
+                      borderColor: isInWatchlist
+                          ? const Color(0xFF22C55E)
+                          : null,
                       icon: isInWatchlist
-                          ? Icons.check_rounded
-                          : Icons.add_outlined,
+                          ? Icons.check_circle_rounded
+                          : Icons.add_rounded,
+                      iconColor: isInWatchlist ? const Color(0xFF22C55E) : null,
                       label: 'Watchlist',
                       textColor: Colors.white,
                       onTap: onWatchlistTap,
