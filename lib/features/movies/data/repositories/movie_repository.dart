@@ -66,19 +66,27 @@ class MovieRepository {
   }
 
   Future<MovieDetailModel> getMovieDetail(int movieId) async {
-    final response = await _remoteDatasource.getMovieDetail(
+    final detailResponse = await _remoteDatasource.getMovieDetail(
       movieId,
       appendToResponse: 'credits',
     );
-    return MovieDetailModel.fromJson(response);
+    final reviewResponse = await _remoteDatasource.getMovieReviews(movieId);
+    return MovieDetailModel.fromJson({
+      ...detailResponse,
+      'reviews': reviewResponse,
+    });
   }
 
   Future<MovieDetailModel> getTvDetail(int tvId) async {
-    final response = await _remoteDatasource.getTvDetail(
+    final detailResponse = await _remoteDatasource.getTvDetail(
       tvId,
       appendToResponse: 'credits',
     );
-    return MovieDetailModel.fromJson(response);
+    final reviewResponse = await _remoteDatasource.getTvReviews(tvId);
+    return MovieDetailModel.fromJson({
+      ...detailResponse,
+      'reviews': reviewResponse,
+    });
   }
 
   Future<MovieDetailModel> getMediaDetail(MovieModel movie) async {

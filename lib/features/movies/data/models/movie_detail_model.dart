@@ -20,6 +20,7 @@ class MovieDetailModel {
     required this.revenue,
     required this.crew,
     required this.cast,
+    required this.reviews,
   });
 
   final int id;
@@ -39,9 +40,11 @@ class MovieDetailModel {
   final int revenue;
   final List<CrewModel> crew;
   final List<CastModel> cast;
+  final List<ReviewModel> reviews;
 
   factory MovieDetailModel.fromJson(Map<String, dynamic> json) {
     final credits = json['credits'] as Map<String, dynamic>? ?? {};
+    final reviews = json['reviews'] as Map<String, dynamic>? ?? {};
     final runtime = _parseRuntime(json);
 
     return MovieDetailModel(
@@ -67,6 +70,9 @@ class MovieDetailModel {
           .toList(),
       cast: (credits['cast'] as List<dynamic>? ?? const [])
           .map((item) => CastModel.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      reviews: (reviews['results'] as List<dynamic>? ?? const [])
+          .map((item) => ReviewModel.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -97,6 +103,35 @@ class MovieDetailModel {
   String get fullBackdropUrl {
     if (backdropPath.isEmpty) return '';
     return '${ApiConstants.imageUrl}$backdropPath';
+  }
+}
+
+class ReviewModel {
+  const ReviewModel({
+    required this.author,
+    required this.content,
+    required this.createdAt,
+    required this.rating,
+  });
+
+  final String author;
+  final String content;
+  final String createdAt;
+  final double rating;
+
+  factory ReviewModel.fromJson(Map<String, dynamic> json) {
+    final authorDetails = json['author_details'] as Map<String, dynamic>? ?? {};
+    return ReviewModel(
+      author: json['author'] ?? '',
+      content: json['content'] ?? '',
+      createdAt: json['created_at'] ?? '',
+      rating: _parseRating(authorDetails['rating']),
+    );
+  }
+
+  static double _parseRating(dynamic value) {
+    if (value is num) return value.toDouble();
+    return 0;
   }
 }
 

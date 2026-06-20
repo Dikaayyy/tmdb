@@ -64,11 +64,204 @@ class MovieDetailContent extends StatelessWidget {
             24,
             castCrewItems.isNotEmpty ? 0 : 24,
             24,
-            32,
+            24,
           ),
           child: _MovieFactCards(detail: detail),
         ),
+        _MovieReviewSection(reviews: detail.reviews),
       ],
+    );
+  }
+}
+
+class _MovieReviewSection extends StatelessWidget {
+  const _MovieReviewSection({required this.reviews});
+
+  final List<ReviewModel> reviews;
+
+  @override
+  Widget build(BuildContext context) {
+    final visibleReviews = reviews
+        .where((review) => review.content.trim().isNotEmpty)
+        .take(4)
+        .toList();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Ulasan',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (visibleReviews.isEmpty)
+            Text(
+              'Belum ada ulasan yang tersedia.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            )
+          else
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final cardWidth = constraints.maxWidth.clamp(0, 342).toDouble();
+
+                return SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip.none,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final review in visibleReviews) ...[
+                        SizedBox(
+                          width: cardWidth,
+                          child: _ReviewCard(review: review),
+                        ),
+                        if (review != visibleReviews.last) const SizedBox(width: 12),
+                      ],
+                    ],
+                  ),
+                );
+              },
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReviewCard extends StatelessWidget {
+  const _ReviewCard({required this.review});
+
+  final ReviewModel review;
+
+  @override
+  Widget build(BuildContext context) {
+    final author = review.author.trim().isEmpty ? 'Anonim' : review.author;
+    final initial = author.characters.first.toUpperCase();
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFFFFEFC),
+        border: Border.all(color: const Color(0x19FACC15)),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black.withValues(alpha: 0.2)),
+                ),
+                child: Text(
+                  initial,
+                  style: const TextStyle(
+                    color: Color(0xFFFAFAFA),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      author,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _formatReviewDate(review.createdAt),
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              _ReviewRatingBadge(rating: review.rating),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            review.content.trim(),
+            maxLines: 12,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatReviewDate(String rawDate) {
+    final parsedDate = DateTime.tryParse(rawDate);
+    if (parsedDate == null) return rawDate.isEmpty ? '-' : rawDate;
+    return DateFormat('dd MMMM yyyy', 'id_ID').format(parsedDate);
+  }
+}
+
+class _ReviewRatingBadge extends StatelessWidget {
+  const _ReviewRatingBadge({required this.rating});
+
+  final double rating;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 23,
+      padding: const EdgeInsets.only(top: 4, left: 6, right: 8, bottom: 4),
+      decoration: BoxDecoration(
+        color: AppColors.secondary,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.star_rounded, size: 12, color: Color(0xFF020617)),
+          const SizedBox(width: 4),
+          Text(
+            rating > 0 ? rating.toStringAsFixed(1) : '-',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF020617),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -8,6 +8,7 @@ import '../../data/repositories/movie_repository.dart';
 import '../widgets/movie_detail_cast_crew_section.dart';
 import '../widgets/movie_detail_content.dart';
 import '../widgets/movie_detail_hero.dart';
+import '../widgets/movie_detail_loading_skeleton.dart';
 
 class MovieDetailPage extends StatefulWidget {
   const MovieDetailPage({super.key, required this.movie});
@@ -69,7 +70,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         future: _movieDetailFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: SizedBox.shrink());
+            return MovieDetailLoadingSkeleton(
+              onBackTap: () => Navigator.of(context).pop(),
+            );
           }
 
           if (snapshot.hasError) {
