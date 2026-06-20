@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../movies/presentation/widgets/featured_movie_card.dart';
+import '../widgets/new_release_section.dart';
+import '../widgets/trending_section.dart';
 import '../viewmodels/home_view_model.dart';
 
 class HomePage extends ConsumerWidget {
@@ -10,10 +11,6 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moviesAsync = ref.watch(homeViewModelProvider);
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final cardWidth = ((screenWidth - 32) * 0.82).clamp(260.0, 330.0);
-    final cardImageHeight = cardWidth * (200 / 310);
-    final featuredSectionHeight = cardImageHeight + 110;
 
     return Scaffold(
       appBar: AppBar(
@@ -21,7 +18,7 @@ class HomePage extends ConsumerWidget {
       ),
       body: moviesAsync.when(
         data: (movies) {
-          if (movies.isEmpty) {
+          if (movies.trendingMovies.isEmpty && movies.newReleaseMovies.isEmpty) {
             return const Center(
               child: Text('No movies found'),
             );
@@ -32,33 +29,8 @@ class HomePage extends ConsumerWidget {
             child: ListView(
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Text(
-                    'Trending Movies',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  height: featuredSectionHeight,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: movies.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 16),
-                    itemBuilder: (context, index) {
-                      final movie = movies[index];
-
-                      return FeaturedMovieCard(
-                        movie: movie,
-                        width: cardWidth,
-                      );
-                    },
-                  ),
-                ),
+                TrendingSection(movies: movies.trendingMovies),
+                NewReleaseSection(movies: movies.newReleaseMovies),
               ],
             ),
           );
