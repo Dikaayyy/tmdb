@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/floating_bottom_nav_bar.dart';
-import '../../../home/presentation/pages/home_page.dart';
-import '../../../profile/presentation/pages/profile_page.dart';
-import '../../../watchlist/presentation/pages/watchlist_page.dart';
+import '../core/widgets/floating_bottom_nav_bar.dart';
+import '../features/home/presentation/pages/home_page.dart';
+import '../features/profile/presentation/pages/profile_page.dart';
+import '../features/watchlist/presentation/pages/watchlist_page.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
