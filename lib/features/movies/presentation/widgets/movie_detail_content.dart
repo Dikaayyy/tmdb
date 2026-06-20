@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_detail_model.dart';
@@ -52,14 +53,67 @@ class MovieDetailContent extends StatelessWidget {
           const SizedBox(height: 32),
           Container(
             width: double.infinity,
-            color: const Color(0xFFFCFDFF),
+            color: const Color(0xFFFAFAFA),
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
             child: MovieDetailCastCrewSection(items: castCrewItems),
           ),
         ] else
           const SizedBox(height: 32),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            24,
+            castCrewItems.isNotEmpty ? 0 : 24,
+            24,
+            32,
+          ),
+          child: _MovieFactCards(detail: detail),
+        ),
       ],
     );
+  }
+}
+
+class _MovieFactCards extends StatelessWidget {
+  const _MovieFactCards({required this.detail});
+
+  final MovieDetailModel detail;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      alignment: WrapAlignment.start,
+      runAlignment: WrapAlignment.start,
+      spacing: 12,
+      runSpacing: 12,
+      children: [
+        _CreditCard(label: 'Status', value: _formatText(detail.status)),
+        _CreditCard(
+          label: 'Bahasa Ucapan',
+          value: _formatLanguage(detail.originalLanguage),
+        ),
+        _CreditCard(label: 'Anggaran', value: _formatCurrency(detail.budget)),
+        _CreditCard(label: 'Pemasukan', value: _formatCurrency(detail.revenue)),
+      ],
+    );
+  }
+
+  String _formatText(String value) {
+    return value.trim().isEmpty ? '-' : value;
+  }
+
+  String _formatLanguage(String languageCode) {
+    final language = languageCode.trim();
+    if (language.isEmpty) return '-';
+    return language.toUpperCase();
+  }
+
+  String _formatCurrency(int amount) {
+    if (amount <= 0) return '-';
+    return NumberFormat.currency(
+      locale: 'en_US',
+      symbol: r'$',
+      decimalDigits: 0,
+    ).format(amount);
   }
 }
 

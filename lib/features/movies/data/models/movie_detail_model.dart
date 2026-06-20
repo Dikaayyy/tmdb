@@ -14,6 +14,10 @@ class MovieDetailModel {
     required this.numberOfEpisodes,
     required this.genres,
     required this.adult,
+    required this.status,
+    required this.originalLanguage,
+    required this.budget,
+    required this.revenue,
     required this.crew,
     required this.cast,
   });
@@ -29,6 +33,10 @@ class MovieDetailModel {
   final int numberOfEpisodes;
   final List<GenreModel> genres;
   final bool adult;
+  final String status;
+  final String originalLanguage;
+  final int budget;
+  final int revenue;
   final List<CrewModel> crew;
   final List<CastModel> cast;
 
@@ -50,6 +58,10 @@ class MovieDetailModel {
           .map((genre) => GenreModel.fromJson(genre as Map<String, dynamic>))
           .toList(),
       adult: json['adult'] ?? false,
+      status: json['status'] ?? '',
+      originalLanguage: json['original_language'] ?? '',
+      budget: _parseNumber(json['budget']),
+      revenue: _parseNumber(json['revenue']),
       crew: (credits['crew'] as List<dynamic>? ?? const [])
           .map((item) => CrewModel.fromJson(item as Map<String, dynamic>))
           .toList(),
