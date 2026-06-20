@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../pages/category_movies_page.dart';
 import '../../../movies/data/models/genre_model.dart';
 
 class CategoriesSection extends StatelessWidget {
@@ -39,7 +40,18 @@ class CategoriesSection extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: genres
-                .map((genre) => _CategoryChip(label: genre.name))
+                .map(
+                  (genre) => _CategoryChip(
+                    label: genre.name,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => CategoryMoviesPage(genre: genre),
+                        ),
+                      );
+                    },
+                  ),
+                )
                 .toList(),
           ),
         ],
@@ -49,34 +61,42 @@ class CategoriesSection extends StatelessWidget {
 }
 
 class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({required this.label});
+  const _CategoryChip({
+    required this.label,
+    required this.onTap,
+  });
 
   final String label;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(minHeight: 28),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-        decoration: ShapeDecoration(
-          color: AppColors.background,
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(
-              width: 1,
-              color: Color(0x1971747D),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+          decoration: ShapeDecoration(
+            color: AppColors.background,
+            shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                width: 1,
+                color: Color(0x1971747D),
+              ),
+              borderRadius: BorderRadius.circular(24),
             ),
-            borderRadius: BorderRadius.circular(24),
           ),
-        ),
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Color(0xFF555555),
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            height: 1.35,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Color(0xFF555555),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              height: 1.35,
+            ),
           ),
         ),
       ),

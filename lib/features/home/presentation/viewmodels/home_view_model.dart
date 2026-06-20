@@ -43,14 +43,20 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
     final movieGenresResponse = results[4] as GenreListResponseModel;
     final tvGenresResponse = results[5] as GenreListResponseModel;
 
-    final combinedGenres = [
-      ...movieGenresResponse.genres,
-      ...tvGenresResponse.genres,
-    ];
+    final uniqueGenresByName = <String, GenreModel>{};
 
-    final uniqueGenresByName = <String, GenreModel>{
-      for (final genre in combinedGenres) genre.name: genre,
-    };
+    for (final genre in movieGenresResponse.genres) {
+      uniqueGenresByName[genre.name] = GenreModel(
+        name: genre.name,
+        movieGenreId: genre.movieGenreId,
+      );
+    }
+
+    for (final genre in tvGenresResponse.genres) {
+      final existing = uniqueGenresByName[genre.name];
+      uniqueGenresByName[genre.name] = (existing ?? GenreModel(name: genre.name))
+          .copyWith(tvGenreId: genre.movieGenreId);
+    }
 
     return HomeState(
       trendingMovies: trendingResponse.movies,
@@ -59,7 +65,9 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
         ...topRatedResponse.movies,
         ...topRatedTvResponse.movies,
       ]),
-      genres: uniqueGenresByName.values.toList()
+      genres: uniqueGenresByName.values
+          .where((genre) => genre.movieGenreId != null && genre.tvGenreId != null)
+          .toList()
         ..sort((a, b) => a.name.compareTo(b.name)),
     );
   }

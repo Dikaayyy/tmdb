@@ -46,6 +46,22 @@ class TmdbRemoteDatasource {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> discoverMoviesByGenre(int genreId) async {
+    final response = await DioClient.instance.get(
+      '/discover/movie',
+      queryParameters: {'with_genres': genreId},
+    );
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> discoverTvByGenre(int genreId) async {
+    final response = await DioClient.instance.get(
+      '/discover/tv',
+      queryParameters: {'with_genres': genreId},
+    );
+    return response.data;
+  }
+
   Future<Map<String, dynamic>> getMovieDetail(int movieId) async {
     final response = await DioClient.instance.get('/movie/$movieId');
     return response.data;

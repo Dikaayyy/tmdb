@@ -52,4 +52,14 @@ class MovieRepository {
     final response = await _remoteDatasource.getTvGenres();
     return GenreListResponseModel.fromJson(response);
   }
+
+  Future<MovieListResponseModel> discoverMoviesByGenre(int genreId) async {
+    final response = await _remoteDatasource.discoverMoviesByGenre(genreId);
+    return MovieListResponseModel.fromJson(response);
+  }
+
+  Future<MovieListResponseModel> discoverTvByGenre(int genreId) async {
+    final response = await _remoteDatasource.discoverTvByGenre(genreId);
+    return MovieListResponseModel.fromJson(response);
+  }
 }
