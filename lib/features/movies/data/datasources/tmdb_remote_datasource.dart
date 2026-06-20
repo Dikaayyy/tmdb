@@ -16,8 +16,13 @@ class TmdbRemoteDatasource {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> getGenres() async {
+  Future<Map<String, dynamic>> getMovieGenres() async {
     final response = await DioClient.instance.get('/genre/movie/list');
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> getTvGenres() async {
+    final response = await DioClient.instance.get('/genre/tv/list');
     return response.data;
   }
 

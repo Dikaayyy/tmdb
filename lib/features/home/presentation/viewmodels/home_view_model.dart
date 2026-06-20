@@ -1,5 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../movies/data/models/genre_model.dart';
+import '../../../movies/data/models/genre_list_response_model.dart';
+import '../../../movies/data/models/movie_list_response_model.dart';
 import '../../../movies/data/repositories/movie_repository.dart';
 import 'home_state.dart';
 
@@ -27,12 +30,31 @@ class HomeViewModel extends AsyncNotifier<HomeState> {
       repository.getTrendingMovies(),
       repository.getNowPlayingMovies(),
       repository.getTopRatedMovies(),
+      repository.getMovieGenres(),
+      repository.getTvGenres(),
     ]);
 
+    final trendingResponse = results[0] as MovieListResponseModel;
+    final newReleaseResponse = results[1] as MovieListResponseModel;
+    final topRatedResponse = results[2] as MovieListResponseModel;
+    final movieGenresResponse = results[3] as GenreListResponseModel;
+    final tvGenresResponse = results[4] as GenreListResponseModel;
+
+    final combinedGenres = [
+      ...movieGenresResponse.genres,
+      ...tvGenresResponse.genres,
+    ];
+
+    final uniqueGenresByName = <String, GenreModel>{
+      for (final genre in combinedGenres) genre.name: genre,
+    };
+
     return HomeState(
-      trendingMovies: results[0].movies,
-      newReleaseMovies: results[1].movies,
-      topRatedMovies: results[2].movies,
+      trendingMovies: trendingResponse.movies,
+      newReleaseMovies: newReleaseResponse.movies,
+      topRatedMovies: topRatedResponse.movies,
+      genres: uniqueGenresByName.values.toList()
+        ..sort((a, b) => a.name.compareTo(b.name)),
     );
   }
 }
