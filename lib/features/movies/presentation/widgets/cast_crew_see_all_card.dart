@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -93,7 +94,7 @@ class _ProfilePlaceholder extends StatelessWidget {
     return Container(
       color: const Color(0xFFE5E7EB),
       child: const Icon(
-        Icons.person_rounded,
+        iconly.IconlyLight.profile,
         color: AppColors.textSecondary,
         size: 32,
       ),

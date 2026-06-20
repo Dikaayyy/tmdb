@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_model.dart';
 import 'movie_image_scrim.dart';
 import 'movie_network_image_frame.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 class FeaturedMovieCard extends StatelessWidget {
   const FeaturedMovieCard({
@@ -148,7 +149,7 @@ class _RatingBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(
-            Icons.star_rounded,
+            iconly.IconlyBold.star,
             size: 12,
             color: Color(0xFF713F12),
           ),

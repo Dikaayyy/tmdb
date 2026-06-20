@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -69,7 +70,7 @@ class MovieDetailRatingChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star_rounded, size: 12, color: Color(0xFF713F12)),
+          const Icon(iconly.IconlyBold.star, size: 12, color: Color(0xFF713F12)),
           const SizedBox(width: 4),
           Text(
             '$rating%',

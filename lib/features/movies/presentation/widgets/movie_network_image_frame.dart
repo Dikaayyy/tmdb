@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -27,7 +28,7 @@ class _MovieNetworkImageFrameState extends State<MovieNetworkImageFrame> {
   Widget build(BuildContext context) {
     if (widget.imageUrl.isEmpty || _hasError) {
       return _ImageFallback(
-        icon: _hasError ? Icons.broken_image_outlined : Icons.movie_outlined,
+        icon: _hasError ? iconly.IconlyLight.image_2 : iconly.IconlyLight.profile,
       );
     }
 
@@ -64,7 +65,7 @@ class _MovieNetworkImageFrameState extends State<MovieNetworkImageFrame> {
                 });
               }
             });
-            return const _ImageFallback(icon: Icons.broken_image_outlined);
+            return const _ImageFallback(icon: iconly.IconlyLight.image_2);
           },
         ),
         if (_isLoaded) widget.overlayBuilder(context),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -266,7 +267,7 @@ class _ReviewRatingBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star_rounded, size: 12, color: Color(0xFF020617)),
+          const Icon(iconly.IconlyBold.star, size: 12, color: Color(0xFF020617)),
           const SizedBox(width: 4),
           Text(
             rating > 0 ? rating.toStringAsFixed(1) : '-',
