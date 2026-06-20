@@ -4,16 +4,21 @@ import '../../../../core/theme/app_colors.dart';
 import 'cast_crew_card.dart';
 
 class MovieDetailCastCrewSection extends StatelessWidget {
-  const MovieDetailCastCrewSection({super.key, required this.items});
+  const MovieDetailCastCrewSection({
+    super.key,
+    required this.items,
+    required this.onSeeAllTap,
+  });
 
   final List<MovieDetailCastCrewItem> items;
+  final VoidCallback onSeeAllTap;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _CastCrewSectionHeader(),
+        _CastCrewSectionHeader(onSeeAllTap: onSeeAllTap),
         const SizedBox(height: 12),
         SizedBox(
           height: 202,
@@ -52,7 +57,9 @@ class MovieDetailCastCrewItem {
 }
 
 class _CastCrewSectionHeader extends StatelessWidget {
-  const _CastCrewSectionHeader();
+  const _CastCrewSectionHeader({required this.onSeeAllTap});
+
+  final VoidCallback onSeeAllTap;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +75,7 @@ class _CastCrewSectionHeader extends StatelessWidget {
           ),
         ),
         TextButton.icon(
-          onPressed: () {},
+          onPressed: onSeeAllTap,
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: const Size(0, 32),

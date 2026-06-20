@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_detail_model.dart';
+import '../pages/movie_cast_crew_see_all_page.dart';
 import 'movie_detail_cast_crew_section.dart';
 
 class MovieDetailContent extends StatelessWidget {
@@ -55,7 +56,20 @@ class MovieDetailContent extends StatelessWidget {
             width: double.infinity,
             color: const Color(0xFFFAFAFA),
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-            child: MovieDetailCastCrewSection(items: castCrewItems),
+            child: MovieDetailCastCrewSection(
+              items: castCrewItems,
+              onSeeAllTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => MovieCastCrewSeeAllPage(
+                      title: detail.title,
+                      cast: detail.cast,
+                      crew: detail.crew,
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         ] else
           const SizedBox(height: 32),
@@ -103,9 +117,9 @@ class _MovieReviewSection extends StatelessWidget {
           if (visibleReviews.isEmpty)
             Text(
               'Belum ada ulasan yang tersedia.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.textSecondary,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
             )
           else
             LayoutBuilder(
@@ -123,7 +137,8 @@ class _MovieReviewSection extends StatelessWidget {
                           width: cardWidth,
                           child: _ReviewCard(review: review),
                         ),
-                        if (review != visibleReviews.last) const SizedBox(width: 12),
+                        if (review != visibleReviews.last)
+                          const SizedBox(width: 12),
                       ],
                     ],
                   ),
@@ -166,7 +181,9 @@ class _ReviewCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black.withValues(alpha: 0.2)),
+                  border: Border.all(
+                    color: Colors.black.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Text(
                   initial,
