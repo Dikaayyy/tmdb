@@ -4,12 +4,8 @@ import '../../../movies/data/models/genre_list_response_model.dart';
 import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/movie_list_response_model.dart';
 import '../../../movies/data/models/movie_model.dart';
-import '../../../movies/data/repositories/movie_repository.dart';
+import '../../../movies/data/providers/movie_repository_provider.dart';
 import 'home_state.dart';
-
-final movieRepositoryProvider = Provider<MovieRepository>((ref) {
-  return MovieRepository();
-});
 
 final homeViewModelProvider =
     AsyncNotifierProvider<HomeViewModel, HomeState>(HomeViewModel.new);

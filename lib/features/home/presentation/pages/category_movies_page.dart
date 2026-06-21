@@ -5,9 +5,9 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_state_view.dart';
 import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/movie_model.dart';
+import '../../../movies/data/providers/movie_repository_provider.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
 import '../../../movies/presentation/widgets/featured_movie_card.dart';
-import '../viewmodels/home_view_model.dart';
 import '../widgets/see_all_category_tabs.dart';
 import '../widgets/see_all_loading_skeleton.dart';
 

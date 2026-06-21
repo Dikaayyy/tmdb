@@ -1,11 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/models/watchlist_movie_model.dart';
+import '../../data/providers/watchlist_repository_provider.dart';
 import '../../data/repositories/watchlist_repository.dart';
-
-final watchlistRepositoryProvider = Provider<WatchlistRepository>((ref) {
-  return WatchlistRepository();
-});
 
 final watchlistViewModelProvider =
     NotifierProvider<WatchlistViewModel, List<WatchlistMovieModel>>(
