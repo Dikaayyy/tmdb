@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../main/main_navigation_page.dart';
+import '../../../auth/presentation/pages/login_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -20,7 +20,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(_splashDuration, _goToHome);
+    _timer = Timer(_splashDuration, _goToLogin);
   }
 
   @override
@@ -29,12 +29,12 @@ class _SplashPageState extends State<SplashPage> {
     super.dispose();
   }
 
-  void _goToHome() {
+  void _goToLogin() {
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
-        pageBuilder: (_, __, ___) => const MainNavigationPage(),
+        pageBuilder: (_, __, ___) => const LoginPage(),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
         },
