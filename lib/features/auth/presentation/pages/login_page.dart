@@ -102,16 +102,42 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 if (!isKeyboardVisible)
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(24, 0, 24, 40),
-                    child: Text(
-                      'Dengan membuat akun atau masuk, Anda setuju dengan Ketentuan Layanan dan Kebijakan Privasi kami.',
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+                    child: RichText(
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w400,
-                        height: 1.5,
+                      text: const TextSpan(
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontFamily: 'PlusJakartaSans',
+                          fontSize: 10,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5,
+                        ),
+                        children: [
+                          TextSpan(
+                            text:
+                                'Dengan membuat akun atau masuk, Anda setuju dengan ',
+                          ),
+                          TextSpan(
+                            text: 'Ketentuan Layanan',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(text: ' dan '),
+                          TextSpan(
+                            text: 'Kebijakan Privasi',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextSpan(text: ' kami.'),
+                        ],
                       ),
                     ),
                   ),
