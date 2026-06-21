@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/storage/hive_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_toast.dart';
+import '../../../../main/main_navigation_page.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/auth_input_field.dart';
 import '../widgets/auth_separator.dart';
@@ -26,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  Future<void> _handleLogin() async {
     final emailEmpty = _emailController.text.trim().isEmpty;
     final passwordEmpty = _passwordController.text.trim().isEmpty;
 
@@ -37,7 +39,18 @@ class _LoginPageState extends State<LoginPage> {
 
     if (emailEmpty || passwordEmpty) {
       AppErrorToast.show(context, message: 'Isi form yang dibutuhkan');
+      return;
     }
+
+    await HiveService.saveLogin(true);
+
+    if (!mounted) return;
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => const MainNavigationPage(),
+      ),
+    );
   }
 
   @override

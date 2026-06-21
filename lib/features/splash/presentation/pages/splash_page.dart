@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/storage/hive_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/pages/login_page.dart';
+import '../../../../main/main_navigation_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -20,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(_splashDuration, _goToLogin);
+    _timer = Timer(_splashDuration, _goToNextPage);
   }
 
   @override
@@ -29,12 +31,16 @@ class _SplashPageState extends State<SplashPage> {
     super.dispose();
   }
 
-  void _goToLogin() {
+  void _goToNextPage() {
     if (!mounted) return;
+
+    final isLoggedIn = HiveService.getLoginStatus();
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
-        pageBuilder: (_, __, ___) => const LoginPage(),
+        pageBuilder: (_, __, ___) => isLoggedIn
+            ? const MainNavigationPage()
+            : const LoginPage(),
         transitionsBuilder: (_, animation, __, child) {
           return FadeTransition(opacity: animation, child: child);
         },
