@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/error_state_view.dart';
+import '../viewmodels/home_view_model.dart';
 import '../widgets/categories_section.dart';
 import '../widgets/home_loading_skeleton.dart';
 import '../widgets/new_release_section.dart';
 import '../widgets/top_rated_section.dart';
 import '../widgets/trending_section.dart';
-import '../viewmodels/home_view_model.dart';
-import 'package:iconly/iconly.dart' as iconly;
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
