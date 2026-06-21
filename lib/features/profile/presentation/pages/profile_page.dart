@@ -1,23 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
+import '../../../../core/storage/hive_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_action_bottom_sheet.dart';
+import '../../../auth/presentation/pages/login_page.dart';
 import '../widgets/profile_avatar.dart';
 import '../widgets/profile_info.dart';
 import '../widgets/profile_more_button.dart';
-
-enum LastViewedContentType { movie, series }
-
-class LastViewedContent {
-  const LastViewedContent({
-    required this.id,
-    required this.title,
-    required this.type,
-  });
-
-  final int id;
-  final String title;
-  final LastViewedContentType type;
-}
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -27,40 +17,36 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  static const _email = 'user@example.com';
-  static final _joinedAt = DateTime(2026, 6);
+  static const _name = 'ilhamrajab';
+  static const _email = 'iamidat@outlook.com';
+  static const _joinedSince = 'Bergabung sejak November 2023';
 
-  LastViewedContent? _lastViewedContent;
+  Future<void> _handleLogout() async {
+    await HiveService.logout();
 
-  String get _displayName => _email.split('@').first;
+    if (!mounted) return;
 
-  String get _joinedSince {
-    const months = [
-      'Januari',
-      'Februari',
-      'Maret',
-      'April',
-      'Mei',
-      'Juni',
-      'Juli',
-      'Agustus',
-      'September',
-      'Oktober',
-      'November',
-      'Desember',
-    ];
-
-    return 'Bergabung sejak ${months[_joinedAt.month - 1]} ${_joinedAt.year}';
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
+      (_) => false,
+    );
   }
 
-  String? get _lastViewedLabel {
-    final content = _lastViewedContent;
-    if (content == null) return null;
-
-    final type = content.type == LastViewedContentType.movie
-        ? 'Movie'
-        : 'Series';
-    return 'Terakhir dilihat: $type - ${content.title}';
+  void _showProfileActions() {
+    showAppActionBottomSheet<void>(
+      context: context,
+      title: 'Pengaturan Akun',
+      items: [
+        AppActionBottomSheetItem(
+          icon: iconly.IconlyLight.logout,
+          title: 'Log Out',
+          subtitle:
+              'Pastikan untuk log out agar informasi akunmu tetap terlindungi',
+          mirrorIcon: true,
+          onTap: _handleLogout,
+        ),
+      ],
+    );
   }
 
   @override
@@ -77,24 +63,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 const ProfileAvatar(),
                 const SizedBox(height: 12),
                 ProfileInfo(
-                  name: _displayName,
+                  name: _name,
                   email: _email,
                   joinedSince: _joinedSince,
                 ),
                 const SizedBox(height: 12),
-                ProfileMoreButton(onPressed: () {}),
-                if (_lastViewedLabel case final label?) ...[
-                  const SizedBox(height: 24),
-                  Text(
-                    label,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
+                ProfileMoreButton(onPressed: _showProfileActions),
               ],
             ),
           ),
