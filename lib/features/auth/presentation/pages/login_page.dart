@@ -10,7 +10,11 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardInset = MediaQuery.viewInsetsOf(context).bottom;
+    final isKeyboardVisible = keyboardInset > 0;
+
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Stack(
@@ -28,11 +32,12 @@ class LoginPage extends StatelessWidget {
             Column(
               children: [
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.only(top: 186, bottom: 32),
+                  child: Transform.translate(
+                    offset: Offset(0, isKeyboardVisible ? -120 : 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        const SizedBox(height: 186),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Column(
@@ -96,19 +101,20 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(24, 0, 24, 40),
-                  child: Text(
-                    'Dengan membuat akun atau masuk, Anda setuju dengan Ketentuan Layanan dan Kebijakan Privasi kami.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
+                if (!isKeyboardVisible)
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(24, 0, 24, 40),
+                    child: Text(
+                      'Dengan membuat akun atau masuk, Anda setuju dengan Ketentuan Layanan dan Kebijakan Privasi kami.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        height: 1.5,
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ],
