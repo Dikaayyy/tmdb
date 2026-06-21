@@ -19,11 +19,12 @@ class AuthInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44,
+      height: 52,
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
         obscureText: obscureText,
+        obscuringCharacter: '*',
         cursorColor: AppColors.primary,
         style: const TextStyle(
           color: AppColors.textPrimary,
@@ -31,8 +32,14 @@ class AuthInputField extends StatelessWidget {
           fontWeight: FontWeight.w400,
         ),
         decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: const TextStyle(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          floatingLabelStyle: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
+          labelStyle: const TextStyle(
             color: AppColors.textSecondary,
             fontSize: 12,
             fontWeight: FontWeight.w400,
@@ -41,7 +48,7 @@ class AuthInputField extends StatelessWidget {
           fillColor: const Color(0xFFFAFAFA),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 20,
-            vertical: 12,
+            vertical: 14,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(999),
