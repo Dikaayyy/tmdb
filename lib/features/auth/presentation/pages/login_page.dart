@@ -1,12 +1,44 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/app_error_toast.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/auth_input_field.dart';
 import '../widgets/auth_separator.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _showEmailError = false;
+  bool _showPasswordError = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _handleLogin() {
+    final emailEmpty = _emailController.text.trim().isEmpty;
+    final passwordEmpty = _passwordController.text.trim().isEmpty;
+
+    setState(() {
+      _showEmailError = emailEmpty;
+      _showPasswordError = passwordEmpty;
+    });
+
+    if (emailEmpty || passwordEmpty) {
+      AppErrorToast.show(context, message: 'Isi form yang dibutuhkan');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,18 +94,22 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 48),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Column(
                             children: [
                               AuthInputField(
                                 hintText: 'Alamat Email',
+                                controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
+                                isError: _showEmailError,
                               ),
-                              SizedBox(height: 8),
+                              const SizedBox(height: 8),
                               AuthInputField(
                                 hintText: 'Kata Sandi',
+                                controller: _passwordController,
                                 obscureText: true,
+                                isError: _showPasswordError,
                               ),
                             ],
                           ),
@@ -81,7 +117,10 @@ class LoginPage extends StatelessWidget {
                         const SizedBox(height: 24),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24),
-                          child: AuthButton(label: 'Login', onPressed: () {}),
+                          child: AuthButton(
+                            label: 'Login',
+                            onPressed: _handleLogin,
+                          ),
                         ),
                         const SizedBox(height: 32),
                         const Padding(

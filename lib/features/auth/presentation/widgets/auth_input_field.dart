@@ -8,6 +8,7 @@ class AuthInputField extends StatelessWidget {
     this.controller,
     this.keyboardType,
     this.obscureText = false,
+    this.isError = false,
     super.key,
   });
 
@@ -15,6 +16,7 @@ class AuthInputField extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final bool obscureText;
+  final bool isError;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class AuthInputField extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         obscuringCharacter: '*',
-        cursorColor: AppColors.primary,
+        cursorColor: isError ? const Color(0xFFDC2626) : AppColors.primary,
         style: const TextStyle(
           color: AppColors.textPrimary,
           fontSize: 12,
@@ -34,13 +36,13 @@ class AuthInputField extends StatelessWidget {
         decoration: InputDecoration(
           labelText: hintText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
-          floatingLabelStyle: const TextStyle(
-            color: AppColors.textSecondary,
+          floatingLabelStyle: TextStyle(
+            color: isError ? const Color(0xFFB91C1C) : AppColors.textSecondary,
             fontSize: 12,
             fontWeight: FontWeight.w400,
           ),
-          labelStyle: const TextStyle(
-            color: AppColors.textSecondary,
+          labelStyle: TextStyle(
+            color: isError ? const Color(0xFFB91C1C) : AppColors.textSecondary,
             fontSize: 12,
             fontWeight: FontWeight.w400,
           ),
@@ -56,11 +58,17 @@ class AuthInputField extends StatelessWidget {
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(999),
-            borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+            borderSide: BorderSide(
+              color: isError
+                  ? const Color(0xFFDC2626)
+                  : const Color(0xFFEEEEEE),
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(999),
-            borderSide: const BorderSide(color: AppColors.primary),
+            borderSide: BorderSide(
+              color: isError ? const Color(0xFFDC2626) : AppColors.primary,
+            ),
           ),
         ),
       ),
