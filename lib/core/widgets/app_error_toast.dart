@@ -68,7 +68,6 @@ class AppErrorToast extends StatelessWidget {
                   style: const TextStyle(
                     color: Color(0xFFB91C1C),
                     fontSize: 14,
-                    fontFamily: 'Nacelle',
                     fontWeight: FontWeight.w400,
                     height: 1.5,
                   ),
