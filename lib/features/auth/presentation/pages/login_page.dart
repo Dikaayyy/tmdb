@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/storage/hive_service.dart';
+import '../../../../core/storage/session_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_error_toast.dart';
 import '../../../../main/main_navigation_page.dart';
@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _sessionStorage = SessionStorage();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _showEmailError = false;
@@ -42,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    await HiveService.saveLogin(true);
+    await _sessionStorage.saveLogin(true);
 
     if (!mounted) return;
 
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _handleGuestLogin() async {
-    await HiveService.saveGuestLogin();
+    await _sessionStorage.saveGuestLogin();
 
     if (!mounted) return;
 

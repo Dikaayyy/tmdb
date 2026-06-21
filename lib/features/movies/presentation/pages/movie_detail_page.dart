@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/widgets/error_state_view.dart';
-import '../../../../core/storage/hive_service.dart';
+import '../../../profile/data/datasources/recently_viewed_local_datasource.dart';
 import '../../../watchlist/data/models/watchlist_movie_model.dart';
 import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../../data/models/movie_detail_model.dart';
@@ -24,12 +24,13 @@ class MovieDetailPage extends ConsumerStatefulWidget {
 }
 
 class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
+  final _recentlyViewedDatasource = RecentlyViewedLocalDatasource();
   late Future<MovieDetailModel> _movieDetailFuture;
 
   @override
   void initState() {
     super.initState();
-    HiveService.saveRecentlyViewedMovie(widget.movie);
+    _recentlyViewedDatasource.saveMovie(widget.movie);
     _movieDetailFuture = MovieRepository().getMediaDetail(widget.movie);
   }
 

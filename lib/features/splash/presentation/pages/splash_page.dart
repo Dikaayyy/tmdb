@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/storage/hive_service.dart';
+import '../../../../core/storage/session_storage.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../../main/main_navigation_page.dart';
@@ -16,6 +16,8 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   static const _splashDuration = Duration(seconds: 2);
+
+  final _sessionStorage = SessionStorage();
 
   Timer? _timer;
 
@@ -34,7 +36,7 @@ class _SplashPageState extends State<SplashPage> {
   void _goToNextPage() {
     if (!mounted) return;
 
-    final isLoggedIn = HiveService.getLoginStatus();
+    final isLoggedIn = _sessionStorage.getLoginStatus();
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
