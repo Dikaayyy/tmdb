@@ -15,6 +15,7 @@ class MainNavigationPage extends StatefulWidget {
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
+  final _profileKey = GlobalKey<ProfilePageState>();
 
   static const _items = [
     FloatingBottomNavBarItem(
@@ -34,7 +35,11 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     ),
   ];
 
-  final _pages = const [HomePage(), WatchlistPage(), ProfilePage()];
+  late final _pages = [
+    const HomePage(),
+    const WatchlistPage(),
+    ProfilePage(key: _profileKey),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +56,9 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                 if (_currentIndex == index) return;
 
                 setState(() => _currentIndex = index);
+                if (index == 2) {
+                  _profileKey.currentState?.refreshRecentlyViewedMovies();
+                }
               },
             ),
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../../core/storage/hive_service.dart';
 import '../../../watchlist/data/models/watchlist_movie_model.dart';
 import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../../data/models/movie_detail_model.dart';
@@ -28,6 +29,7 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
   @override
   void initState() {
     super.initState();
+    HiveService.saveRecentlyViewedMovie(widget.movie);
     _movieDetailFuture = MovieRepository().getMediaDetail(widget.movie);
   }
 

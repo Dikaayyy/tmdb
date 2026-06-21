@@ -8,16 +8,19 @@ class ProfileInfo extends StatelessWidget {
     required this.name,
     required this.email,
     this.joinedSince,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   });
 
   final String name;
   final String email;
   final String? joinedSince;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: crossAxisAlignment,
       children: [
         Text(
           name,
@@ -30,7 +33,9 @@ class ProfileInfo extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           email,
-          textAlign: TextAlign.center,
+          textAlign: crossAxisAlignment == CrossAxisAlignment.center
+              ? TextAlign.center
+              : TextAlign.start,
           style: const TextStyle(
             color: AppColors.textSecondary,
             fontSize: 10,

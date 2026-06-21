@@ -1,9 +1,6 @@
 import '../../../../core/constants/api_constants.dart';
 
-enum MediaType {
-  movie,
-  tv,
-}
+enum MediaType { movie, tv }
 
 class MovieModel {
   const MovieModel({
@@ -36,10 +33,10 @@ class MovieModel {
     final parsedMediaType = jsonMediaType == 'tv'
         ? MediaType.tv
         : jsonMediaType == 'movie'
-            ? MediaType.movie
-            : json.containsKey('first_air_date') || json.containsKey('name')
-                ? MediaType.tv
-                : MediaType.movie;
+        ? MediaType.movie
+        : json.containsKey('first_air_date') || json.containsKey('name')
+        ? MediaType.tv
+        : MediaType.movie;
 
     return MovieModel(
       id: json['id'] ?? 0,
@@ -54,6 +51,20 @@ class MovieModel {
           .toList(),
       mediaType: parsedMediaType,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'overview': overview,
+      'poster_path': posterPath,
+      'backdrop_path': backdropPath,
+      'vote_average': voteAverage,
+      'release_date': releaseDate,
+      'genre_ids': genreIds,
+      'media_type': mediaType.name,
+    };
   }
 
   String get fullPosterUrl {
