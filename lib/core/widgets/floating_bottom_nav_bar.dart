@@ -56,10 +56,15 @@ class FloatingBottomNavBar extends StatelessWidget {
 }
 
 class FloatingBottomNavBarItem {
-  const FloatingBottomNavBarItem({required this.label, required this.icon});
+  const FloatingBottomNavBarItem({
+    required this.label,
+    required this.icon,
+    required this.activeIcon,
+  });
 
   final String label;
   final IconData icon;
+  final IconData activeIcon;
 }
 
 class _FloatingBottomNavItem extends StatefulWidget {
@@ -158,7 +163,11 @@ class _FloatingBottomNavItemState extends State<_FloatingBottomNavItem>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(widget.item.icon, size: _iconSize, color: iconColor),
+                  Icon(
+                    widget.isSelected ? widget.item.activeIcon : widget.item.icon,
+                    size: _iconSize,
+                    color: iconColor,
+                  ),
                   ClipRect(
                     child: Align(
                       alignment: Alignment.centerLeft,

@@ -17,9 +17,21 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   int _currentIndex = 0;
 
   static const _items = [
-    FloatingBottomNavBarItem(label: 'Beranda', icon: iconly.IconlyBold.home),
-    FloatingBottomNavBarItem(label: 'Watchlist', icon: iconly.IconlyLight.bookmark),
-    FloatingBottomNavBarItem(label: 'Profil', icon: iconly.IconlyLight.profile),
+    FloatingBottomNavBarItem(
+      label: 'Beranda',
+      icon: iconly.IconlyLight.home,
+      activeIcon: iconly.IconlyBold.home,
+    ),
+    FloatingBottomNavBarItem(
+      label: 'Watchlist',
+      icon: iconly.IconlyLight.bookmark,
+      activeIcon: iconly.IconlyBold.bookmark,
+    ),
+    FloatingBottomNavBarItem(
+      label: 'Profil',
+      icon: iconly.IconlyLight.profile,
+      activeIcon: iconly.IconlyBold.profile,
+    ),
   ];
 
   final _pages = const [HomePage(), WatchlistPage(), ProfilePage()];
