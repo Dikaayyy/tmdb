@@ -78,12 +78,29 @@ class CastCrewListItem {
   const CastCrewListItem({
     required this.name,
     required this.role,
-    required this.imageUrl,
+    this.imageUrl = '',
   });
 
   final String name;
   final String role;
   final String imageUrl;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is CastCrewListItem &&
+            other.name == name &&
+            other.role == role &&
+            other.imageUrl == imageUrl;
+  }
+
+  @override
+  int get hashCode => Object.hash(name, role, imageUrl);
+
+  @override
+  String toString() {
+    return 'CastCrewListItem(name: $name, role: $role, imageUrl: $imageUrl)';
+  }
 }
 
 class _ProfilePlaceholder extends StatelessWidget {

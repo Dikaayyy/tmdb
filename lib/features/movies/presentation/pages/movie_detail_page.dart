@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/widgets/error_state_view.dart';
+import '../../../watchlist/data/models/watchlist_movie_model.dart';
+import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../../data/models/movie_detail_model.dart';
 import '../../data/models/movie_model.dart';
 import '../../data/repositories/movie_repository.dart';
-import '../../../watchlist/data/models/watchlist_movie_model.dart';
-import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../widgets/movie_detail_cast_crew_section.dart';
 import '../widgets/movie_detail_content.dart';
 import '../widgets/movie_detail_hero.dart';

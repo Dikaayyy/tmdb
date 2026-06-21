@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../pages/see_all_page.dart';
 import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/presentation/pages/movie_detail_page.dart';
 import '../../../movies/presentation/widgets/top_rated_movie_card.dart';
+import '../pages/see_all_page.dart';
 import 'home_section_header.dart';
 
 class TopRatedSection extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../pages/category_movies_page.dart';
 import '../../../movies/data/models/genre_model.dart';
+import '../pages/category_movies_page.dart';
 
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({

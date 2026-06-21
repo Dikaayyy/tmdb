@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 import '../core/widgets/floating_bottom_nav_bar.dart';
 import '../features/home/presentation/pages/home_page.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
 import '../features/watchlist/presentation/pages/watchlist_page.dart';
-import 'package:iconly/iconly.dart' as iconly;
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});

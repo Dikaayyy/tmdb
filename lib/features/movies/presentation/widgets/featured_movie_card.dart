@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:iconly/iconly.dart' as iconly;
 
 import '../../../../core/theme/app_colors.dart';
 import '../../data/models/movie_model.dart';
 import 'movie_image_scrim.dart';
 import 'movie_network_image_frame.dart';
-import 'package:iconly/iconly.dart' as iconly;
 
 class FeaturedMovieCard extends StatelessWidget {
   const FeaturedMovieCard({

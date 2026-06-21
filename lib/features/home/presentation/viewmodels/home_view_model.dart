@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/genre_list_response_model.dart';
-import '../../../movies/data/models/movie_model.dart';
+import '../../../movies/data/models/genre_model.dart';
 import '../../../movies/data/models/movie_list_response_model.dart';
+import '../../../movies/data/models/movie_model.dart';
 import '../../../movies/data/repositories/movie_repository.dart';
 import 'home_state.dart';
 
