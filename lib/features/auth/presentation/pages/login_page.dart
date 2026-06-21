@@ -72,16 +72,7 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 470,
-              child: Image.asset(
-                'assets/images/headerimage.png',
-                fit: BoxFit.cover,
-              ),
-            ),
+            const _HeaderImage(),
             Column(
               children: [
                 Expanded(
@@ -95,11 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Column(
                             children: [
-                              Image.asset(
-                                'assets/images/logowtxt.png',
-                                width: 124,
-                                fit: BoxFit.contain,
-                              ),
+                              const _LogoImage(),
                               const SizedBox(height: 32),
                               const Text(
                                 'Siap-siaplah untuk terjun ke dalam kisah-kisah terhebat di TV dan Film',
@@ -123,12 +110,16 @@ class _LoginPageState extends State<LoginPage> {
                                 hintText: 'Alamat Email',
                                 controller: _emailController,
                                 keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                autofillHints: const [AutofillHints.email],
                                 isError: _showEmailError,
                               ),
                               const SizedBox(height: 8),
                               AuthInputField(
                                 hintText: 'Kata Sandi',
                                 controller: _passwordController,
+                                textInputAction: TextInputAction.done,
+                                autofillHints: const [AutofillHints.password],
                                 obscureText: true,
                                 isError: _showPasswordError,
                               ),
@@ -205,6 +196,43 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _HeaderImage extends StatelessWidget {
+  const _HeaderImage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      height: 470,
+      child: RepaintBoundary(
+        child: Image.asset(
+          'assets/images/headerimage.png',
+          fit: BoxFit.cover,
+          cacheHeight: 940,
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoImage extends StatelessWidget {
+  const _LogoImage();
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: Image.asset(
+        'assets/images/logowtxt.png',
+        width: 124,
+        fit: BoxFit.contain,
+        cacheWidth: 248,
       ),
     );
   }

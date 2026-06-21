@@ -7,6 +7,8 @@ class AuthInputField extends StatelessWidget {
     required this.hintText,
     this.controller,
     this.keyboardType,
+    this.textInputAction,
+    this.autofillHints,
     this.obscureText = false,
     this.isError = false,
     super.key,
@@ -15,6 +17,8 @@ class AuthInputField extends StatelessWidget {
   final String hintText;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final Iterable<String>? autofillHints;
   final bool obscureText;
   final bool isError;
 
@@ -25,6 +29,8 @@ class AuthInputField extends StatelessWidget {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        textInputAction: textInputAction,
+        autofillHints: autofillHints,
         obscureText: obscureText,
         obscuringCharacter: '*',
         cursorColor: isError ? const Color(0xFFDC2626) : AppColors.primary,
