@@ -55,14 +55,14 @@ class _SplashPageState extends State<SplashPage> {
               Center(
                 child: Image(
                   image: AssetImage('assets/images/logowtxt.png'),
-                  width: 220,
+                  width: 124,
                   fit: BoxFit.contain,
                 ),
               ),
               Spacer(),
               Image(
                 image: AssetImage('assets/images/tiketux.png'),
-                width: 120,
+                width: 84,
                 fit: BoxFit.contain,
               ),
             ],
