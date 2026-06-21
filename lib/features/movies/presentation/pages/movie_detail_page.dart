@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/widgets/error_state_view.dart';
 import '../../../profile/data/datasources/recently_viewed_local_datasource.dart';
@@ -9,7 +8,7 @@ import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../../data/models/movie_detail_model.dart';
 import '../../data/models/movie_model.dart';
 import '../../data/repositories/movie_repository.dart';
-import '../widgets/movie_detail_cast_crew_section.dart';
+import '../utils/movie_detail_formatter.dart';
 import '../widgets/movie_detail_content.dart';
 import '../widgets/movie_detail_hero.dart';
 import '../widgets/movie_detail_loading_skeleton.dart';
@@ -47,32 +46,6 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
     if (!mounted) return;
   }
 
-  List<MovieDetailCastCrewItem> _castCrewItems(MovieDetailModel detail) {
-    final castItems = detail.cast
-        .where((cast) => cast.name.isNotEmpty)
-        .take(5)
-        .map(
-          (cast) => MovieDetailCastCrewItem(
-            name: cast.name,
-            role: cast.character.isEmpty ? 'Pemeran' : cast.character,
-            imageUrl: cast.fullProfileUrl,
-          ),
-        );
-
-    final crewItems = detail.crew
-        .where((crew) => crew.name.isNotEmpty && crew.job.isNotEmpty)
-        .take(5)
-        .map(
-          (crew) => MovieDetailCastCrewItem(
-            name: crew.name,
-            role: crew.job,
-            imageUrl: crew.fullProfileUrl,
-          ),
-        );
-
-    return [...castItems, ...crewItems].take(5).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final watchlistMovies = ref.watch(watchlistViewModelProvider);
@@ -105,16 +78,17 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
             return const Center(child: Text('Movie detail not found'));
           }
 
-          final backdropUrl = detail.fullBackdropUrl.isNotEmpty
-              ? detail.fullBackdropUrl
-              : detail.fullPosterUrl;
-          final genresText = detail.genres
-              .map((genre) => genre.name)
-              .join(', ');
-          final releaseDate = _formatDate(detail.releaseDate);
-          final durationText = _formatRuntimeOrEpisodes(detail);
-          final rating = (detail.voteAverage * 10).round();
-          final castCrewItems = _castCrewItems(detail);
+          final backdropUrl = MovieDetailFormatter.backdropUrl(detail);
+          final genresText = MovieDetailFormatter.genresText(detail);
+          final releaseDate = MovieDetailFormatter.releaseDate(
+            detail.releaseDate,
+          );
+          final durationText = MovieDetailFormatter.runtimeOrEpisodes(
+            detail,
+            isTv: widget.movie.isTv,
+          );
+          final rating = MovieDetailFormatter.rating(detail);
+          final castCrewItems = MovieDetailFormatter.castCrewItems(detail);
           final isInWatchlist = watchlistMovies.any(
             (movie) => movie.id == widget.movie.id,
           );
@@ -147,25 +121,4 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
     );
   }
 
-  String _formatDate(String rawDate) {
-    final parsedDate = DateTime.tryParse(rawDate);
-    if (parsedDate == null) return rawDate.isEmpty ? '-' : rawDate;
-    return DateFormat('dd/MM/yyyy').format(parsedDate);
-  }
-
-  String _formatRuntime(int runtime) {
-    if (runtime <= 0) return '-';
-    final hours = runtime ~/ 60;
-    final minutes = runtime % 60;
-    if (hours <= 0) return '$minutes menit';
-    return '$hours jam $minutes menit';
-  }
-
-  String _formatRuntimeOrEpisodes(MovieDetailModel detail) {
-    if (detail.runtime > 0) return _formatRuntime(detail.runtime);
-    if (widget.movie.isTv && detail.numberOfEpisodes > 0) {
-      return '${detail.numberOfEpisodes} episode';
-    }
-    return '-';
-  }
 }
