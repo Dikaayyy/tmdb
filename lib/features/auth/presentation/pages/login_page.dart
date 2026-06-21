@@ -47,9 +47,17 @@ class _LoginPageState extends State<LoginPage> {
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder: (_) => const MainNavigationPage(),
-      ),
+      MaterialPageRoute<void>(builder: (_) => const MainNavigationPage()),
+    );
+  }
+
+  Future<void> _handleGuestLogin() async {
+    await HiveService.saveGuestLogin();
+
+    if (!mounted) return;
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const MainNavigationPage()),
     );
   }
 
@@ -146,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: AuthButton(
                             label: 'Masuk Sebagai Tamu',
                             isPrimary: false,
-                            onPressed: () {},
+                            onPressed: _handleGuestLogin,
                           ),
                         ),
                       ],

@@ -7,12 +7,12 @@ class ProfileInfo extends StatelessWidget {
     super.key,
     required this.name,
     required this.email,
-    required this.joinedSince,
+    this.joinedSince,
   });
 
   final String name;
   final String email;
-  final String joinedSince;
+  final String? joinedSince;
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +37,17 @@ class ProfileInfo extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          joinedSince,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 10,
-            fontWeight: FontWeight.w400,
+        if (joinedSince != null) ...[
+          const SizedBox(height: 4),
+          Text(
+            joinedSince!,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 10,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
