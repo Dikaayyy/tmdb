@@ -1,4 +1,4 @@
-import '../../../../core/constants/api_constants.dart';
+import '../../../../core/utils/tmdb_image_url_builder.dart';
 import 'genre_model.dart';
 
 class MovieDetailModel {
@@ -95,15 +95,9 @@ class MovieDetailModel {
     return 0;
   }
 
-  String get fullPosterUrl {
-    if (posterPath.isEmpty) return '';
-    return '${ApiConstants.imageUrl}$posterPath';
-  }
+  String get fullPosterUrl => TmdbImageUrlBuilder.build(posterPath);
 
-  String get fullBackdropUrl {
-    if (backdropPath.isEmpty) return '';
-    return '${ApiConstants.imageUrl}$backdropPath';
-  }
+  String get fullBackdropUrl => TmdbImageUrlBuilder.build(backdropPath);
 }
 
 class ReviewModel {
@@ -154,10 +148,7 @@ class CrewModel {
     );
   }
 
-  String get fullProfileUrl {
-    if (profilePath.isEmpty) return '';
-    return '${ApiConstants.imageUrl}$profilePath';
-  }
+  String get fullProfileUrl => TmdbImageUrlBuilder.build(profilePath);
 }
 
 class CastModel {
@@ -179,8 +170,5 @@ class CastModel {
     );
   }
 
-  String get fullProfileUrl {
-    if (profilePath.isEmpty) return '';
-    return '${ApiConstants.imageUrl}$profilePath';
-  }
+  String get fullProfileUrl => TmdbImageUrlBuilder.build(profilePath);
 }

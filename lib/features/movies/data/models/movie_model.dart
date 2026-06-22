@@ -1,4 +1,4 @@
-import '../../../../core/constants/api_constants.dart';
+import '../../../../core/utils/tmdb_image_url_builder.dart';
 
 enum MediaType { movie, tv }
 
@@ -67,13 +67,7 @@ class MovieModel {
     };
   }
 
-  String get fullPosterUrl {
-    if (posterPath.isEmpty) return '';
-    return '${ApiConstants.imageUrl}$posterPath';
-  }
+  String get fullPosterUrl => TmdbImageUrlBuilder.build(posterPath);
 
-  String get fullBackdropUrl {
-    if (backdropPath.isEmpty) return '';
-    return '${ApiConstants.imageUrl}$backdropPath';
-  }
+  String get fullBackdropUrl => TmdbImageUrlBuilder.build(backdropPath);
 }

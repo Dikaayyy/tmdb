@@ -23,7 +23,7 @@ class WatchlistLocalDatasource {
 
   Future<void> addMovie(WatchlistMovieModel movie) async {
     final movies = getAllMovies();
-    final existingIndex = movies.indexWhere((item) => item.id == movie.id);
+    final existingIndex = movies.indexWhere((item) => _isSameMovie(item, movie));
 
     if (existingIndex >= 0) {
       movies[existingIndex] = movie;
@@ -39,8 +39,21 @@ class WatchlistLocalDatasource {
     await _saveMovies(movies);
   }
 
+  Future<void> removeMovie(WatchlistMovieModel movie) async {
+    final movies = getAllMovies()..removeWhere((item) => _isSameMovie(item, movie));
+    await _saveMovies(movies);
+  }
+
   bool isInWatchlist(int movieId) {
     return getAllMovies().any((movie) => movie.id == movieId);
+  }
+
+  bool containsMovie(WatchlistMovieModel movie) {
+    return getAllMovies().any((item) => _isSameMovie(item, movie));
+  }
+
+  bool _isSameMovie(WatchlistMovieModel a, WatchlistMovieModel b) {
+    return a.id == b.id && a.mediaType == b.mediaType;
   }
 
   Future<void> _saveMovies(List<WatchlistMovieModel> movies) async {

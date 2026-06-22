@@ -7,7 +7,7 @@ import '../../../watchlist/data/models/watchlist_movie_model.dart';
 import '../../../watchlist/presentation/viewmodels/watchlist_viewmodel.dart';
 import '../../data/models/movie_detail_model.dart';
 import '../../data/models/movie_model.dart';
-import '../../data/repositories/movie_repository.dart';
+import '../../data/providers/movie_repository_provider.dart';
 import '../utils/movie_detail_formatter.dart';
 import '../widgets/movie_detail_content.dart';
 import '../widgets/movie_detail_hero.dart';
@@ -30,7 +30,9 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
   void initState() {
     super.initState();
     _recentlyViewedDatasource.saveMovie(widget.movie);
-    _movieDetailFuture = MovieRepository().getMediaDetail(widget.movie);
+    _movieDetailFuture = ref
+        .read(movieRepositoryProvider)
+        .getMediaDetail(widget.movie);
   }
 
   Future<void> _toggleWatchlist(MovieDetailModel detail) async {
@@ -42,8 +44,6 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
             mediaType: widget.movie.mediaType,
           ),
         );
-
-    if (!mounted) return;
   }
 
   @override
@@ -65,9 +65,9 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
               message: '${snapshot.error}',
               onRetry: () {
                 setState(() {
-                  _movieDetailFuture = MovieRepository().getMediaDetail(
-                    widget.movie,
-                  );
+                  _movieDetailFuture = ref
+                      .read(movieRepositoryProvider)
+                      .getMediaDetail(widget.movie);
                 });
               },
             );
@@ -90,7 +90,9 @@ class _MovieDetailPageState extends ConsumerState<MovieDetailPage> {
           final rating = MovieDetailFormatter.rating(detail);
           final castCrewItems = MovieDetailFormatter.castCrewItems(detail);
           final isInWatchlist = watchlistMovies.any(
-            (movie) => movie.id == widget.movie.id,
+            (movie) =>
+                movie.id == widget.movie.id &&
+                movie.mediaType == widget.movie.mediaType,
           );
 
           return CustomScrollView(

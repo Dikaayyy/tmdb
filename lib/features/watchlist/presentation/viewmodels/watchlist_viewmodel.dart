@@ -37,6 +37,14 @@ class WatchlistViewModel extends Notifier<List<WatchlistMovieModel>> {
     return state.any((movie) => movie.id == movieId);
   }
 
+  bool containsMovie(WatchlistMovieModel selectedMovie) {
+    return state.any(
+      (movie) =>
+          movie.id == selectedMovie.id &&
+          movie.mediaType == selectedMovie.mediaType,
+    );
+  }
+
   Future<bool> toggleWatchlist(WatchlistMovieModel movie) async {
     final isAdded = await _repository.toggleWatchlist(movie);
     state = _repository.getAllMovies();

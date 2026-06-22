@@ -19,13 +19,21 @@ class WatchlistRepository {
     return _localDatasource.removeMovieById(movieId);
   }
 
+  Future<void> removeMovie(WatchlistMovieModel movie) {
+    return _localDatasource.removeMovie(movie);
+  }
+
   bool isInWatchlist(int movieId) {
     return _localDatasource.isInWatchlist(movieId);
   }
 
+  bool containsMovie(WatchlistMovieModel movie) {
+    return _localDatasource.containsMovie(movie);
+  }
+
   Future<bool> toggleWatchlist(WatchlistMovieModel movie) async {
-    if (isInWatchlist(movie.id)) {
-      await removeMovieById(movie.id);
+    if (containsMovie(movie)) {
+      await removeMovie(movie);
       return false;
     }
 
